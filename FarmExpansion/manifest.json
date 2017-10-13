@@ -1,0 +1,13 @@
+﻿{
+   "Name": "Farm Expansion",
+   "Author": "Advize",
+   "Version": {
+      "MajorVersion": 3,
+      "MinorVersion": 0,
+      "PatchVersion": 0,
+      "Build": null
+   },
+   "Description": "Adds an additional plot of land for crops and animals.",
+   "UniqueID": "Advize.FarmExpansion",
+   "EntryDll": "FarmExpansion.dll"
+}
