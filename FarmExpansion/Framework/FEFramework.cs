@@ -135,9 +135,11 @@ namespace FarmExpansion.Framework
 
             if (!File.Exists(Path.Combine(helper.DirectoryPath, "pslocationdata", $"{Constants.SaveFolderName}.xml")))
             {
-                farmExpansion = new FarmExpansion(map, "FarmExpansion", this);
-                farmExpansion.isFarm = true;
-                farmExpansion.isOutdoors = true;
+                farmExpansion = new FarmExpansion(map, "FarmExpansion", this)
+                {
+                    isFarm = true,
+                    isOutdoors = true
+                };
             }
             else
             {
@@ -330,9 +332,11 @@ namespace FarmExpansion.Framework
 
         private void Load()
         {
-            farmExpansion = new FarmExpansion(map, "FarmExpansion", this);
-            farmExpansion.isFarm = true;
-            farmExpansion.isOutdoors = true;
+            farmExpansion = new FarmExpansion(map, "FarmExpansion", this)
+            {
+                isFarm = true,
+                isOutdoors = true
+            };
 
             string path = Path.Combine(helper.DirectoryPath, "pslocationdata", $"{Constants.SaveFolderName}.xml");
 

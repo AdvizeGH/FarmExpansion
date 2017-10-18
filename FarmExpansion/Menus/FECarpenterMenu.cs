@@ -8,6 +8,7 @@ using StardewValley.Buildings;
 using StardewValley.Locations;
 using StardewValley.Menus;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using xTile.Dimensions;
 using Object = StardewValley.Object;
@@ -17,6 +18,20 @@ namespace FarmExpansion.Menus
 {
     public class FECarpenterMenu : IClickableMenu
     {
+        protected ICollection<BluePrint> _farmBluePrintsToAdd = new Collection<BluePrint>();
+
+        protected ICollection<BluePrint> _expansionBluePrintsToAdd = new Collection<BluePrint>();
+
+        public void AddFarmBluePrint(BluePrint blueprint)
+        {
+            _farmBluePrintsToAdd.Add(blueprint);
+        }
+
+        public void AddExpansionBluePrint(BluePrint blueprint)
+        {
+            _expansionBluePrintsToAdd.Add(blueprint);
+        }
+
         FEFramework framework;
 
         GameLocation previousLocation = Game1.currentLocation;
@@ -169,6 +184,11 @@ namespace FarmExpansion.Menus
                 {
                     this.blueprints.Add(new BluePrint("Deluxe Barn"));
                 }
+                if (!framework.expansionSelected(currentFarm.Name))
+                    this.blueprints.AddRange(_farmBluePrintsToAdd);
+                else
+                    this.blueprints.AddRange(_expansionBluePrintsToAdd);
+                
             //}
         }
 
