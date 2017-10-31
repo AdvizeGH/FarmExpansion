@@ -43,7 +43,6 @@ namespace FarmExpansion.Framework
         {
             if (!Context.IsWorldReady || Game1.activeClickableMenu != null)
                 return;
-
             if (e.KeyPressed.ToString() == "V")
             {
                 if (Game1.currentLocation.Name != "FarmExpansion")
@@ -65,11 +64,11 @@ namespace FarmExpansion.Framework
             }
             if (e.KeyPressed.ToString().Equals("G"))
             {
-                
+
             }
             if (e.KeyPressed.ToString().Equals("O"))
             {
-                
+
             }
         }*/
 
@@ -116,7 +115,7 @@ namespace FarmExpansion.Framework
                 map = helper.Content.Load<Map>("FarmExpansion.xnb", ContentSource.ModFolder);
                 map.LoadTileSheets(Game1.mapDisplayDevice);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //ControlEvents.KeyPressed -= this.ControlEvents_KeyPress;
                 ControlEvents.ControllerButtonPressed -= this.ControlEvents_ControllerButtonPressed;
@@ -219,7 +218,7 @@ namespace FarmExpansion.Framework
             if (farmExpansion.isThereABuildingUnderConstruction() && !Utility.isFestivalDay(Game1.dayOfMonth, Game1.currentSeason))
             {
                 bool flag2 = false;
-                foreach (GameLocation location in Game1.locations)
+                foreach (GameLocation location in Game1.locations/*locations*/)
                 {
                     if (flag2)
                         break;
@@ -270,6 +269,10 @@ namespace FarmExpansion.Framework
                     }
                 }
             }
+            else
+            {
+                farmExpansion.removeCarpenter();
+            }
         }
 
         /*private void TerrainFeaturesChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -282,7 +285,7 @@ namespace FarmExpansion.Framework
         {
             if (Game1.player.UsingTool || Game1.pickingTool || Game1.menuUp || (Game1.eventUp && !Game1.currentLocation.currentEvent.playerControlSequence) || Game1.nameSelectUp || Game1.numberOfSelectedItems != -1 || Game1.fadeToBlack || Game1.activeClickableMenu != null)
                 return;
-            
+
             // get the activated tile
             Vector2 grabTile = new Vector2(Game1.getOldMouseX() + Game1.viewport.X, Game1.getOldMouseY() + Game1.viewport.Y) / Game1.tileSize;
             if (!Utility.tileWithinRadiusOfPlayer((int)grabTile.X, (int)grabTile.Y, 1, Game1.player))

@@ -527,5 +527,31 @@ namespace FarmExpansion
             }
         }
 
+        internal void removeCarpenter()
+        {
+            if (!isThereABuildingUnderConstruction())
+            {
+                List<NPC> npcsToRemove = new List<NPC>();
+                foreach (Building building in buildings)
+                {
+                    npcsToRemove.Clear();
+                    if (building.indoors != null)
+                    {
+                        foreach (NPC npc in building.indoors.characters)
+                        {
+                            if (npc.name.Equals("Robin"))
+                            {
+                                npcsToRemove.Add(npc);
+                            }
+                        }
+                        foreach (NPC carpenter in npcsToRemove)
+                        {
+                            building.indoors.characters.Remove(carpenter);
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }
