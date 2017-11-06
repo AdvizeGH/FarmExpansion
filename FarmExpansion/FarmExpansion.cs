@@ -456,6 +456,91 @@ namespace FarmExpansion
             fixAnimalLocation();
         }
 
+        public override bool checkAction(Location tileLocation, xTile.Dimensions.Rectangle viewport, StardewValley.Farmer who)
+        {
+            Vector2 vector = new Vector2((float)tileLocation.X, (float)tileLocation.Y);
+            if (this.objects.ContainsKey(vector) && this.objects[vector].Type != null)
+            {
+                if (this.objects.ContainsKey(vector) && (this.objects[vector].Type.Equals("Crafting") || this.objects[vector].Type.Equals("interactive")) && this.objects[vector].name.Equals("Bee House"))
+                {
+                    Object beeHive = this.objects[vector];
+                    if (!beeHive.readyForHarvest)
+                    {
+                        return false;
+                    }
+                    beeHive.honeyType = new Object.HoneyType?(Object.HoneyType.Wild);
+                    string str = "Wild";
+                    int num6 = 0;
+                        
+                    Crop crop = this.findCloseFlower(beeHive.tileLocation);
+                    if (crop != null)
+                    {
+                        str = Game1.objectInformation[crop.indexOfHarvest].Split(new char[]
+                        {
+                            '/'
+                        })[0];
+                        int indexOfHarvest = crop.indexOfHarvest;
+                        if (indexOfHarvest != 376)
+                        {
+                            switch (indexOfHarvest)
+                            {
+                                case 591:
+                                    beeHive.honeyType = new Object.HoneyType?(Object.HoneyType.Tulip);
+                                    break;
+                                case 593:
+                                    beeHive.honeyType = new Object.HoneyType?(Object.HoneyType.SummerSpangle);
+                                    break;
+                                case 595:
+                                    beeHive.honeyType = new Object.HoneyType?(Object.HoneyType.FairyRose);
+                                    break;
+                                case 597:
+                                    beeHive.honeyType = new Object.HoneyType?(Object.HoneyType.BlueJazz);
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            beeHive.honeyType = new Object.HoneyType?(Object.HoneyType.Poppy);
+                        }
+                        num6 = Convert.ToInt32(Game1.objectInformation[crop.indexOfHarvest].Split(new char[]
+                        {
+                            '/'
+                        })[1]) * 2;
+                    }
+                    if (beeHive.heldObject != null)
+                    {
+                        beeHive.heldObject.name = str + " Honey";
+                        string displayName = framework.helper.Reflection.GetPrivateMethod(beeHive, "loadDisplayName").Invoke<string>();
+                        beeHive.heldObject.displayName = displayName;
+                        beeHive.heldObject.price += num6;
+                        if (Game1.currentSeason.Equals("winter"))
+                        {
+                            beeHive.heldObject = null;
+                            beeHive.readyForHarvest = false;
+                            beeHive.showNextIndex = false;
+                            return false;
+                        }
+                        if (who.IsMainPlayer && !who.addItemToInventoryBool(beeHive.heldObject, false))
+                        {
+                            Game1.showRedMessage(Game1.content.LoadString("Strings\\StringsFromCSFiles:Crop.cs.588", new object[0]));
+                            return false;
+                        }
+                        Game1.playSound("coin");
+                    }
+                    beeHive.readyForHarvest = false;
+                    beeHive.showNextIndex = false;
+                    if (!Game1.currentSeason.Equals("winter"))
+                    {
+                        beeHive.heldObject = new Object(Vector2.Zero, 340, null, false, true, false, false);
+                        beeHive.minutesUntilReady = 2400 - Game1.timeOfDay + 4320;
+                    }
+                    return true;
+                }
+            }
+
+            return base.checkAction(tileLocation, viewport, who);
+        }
+
         private void fixAnimalLocation()
         {
             foreach (FarmAnimal animal in Game1.getFarm().animals.Values.ToList())
@@ -551,6 +636,32 @@ namespace FarmExpansion
                     }
                 }
             }
+        }
+
+        private Crop findCloseFlower(Vector2 startTileLocation)
+        {
+            Queue<Vector2> queue = new Queue<Vector2>();
+            HashSet<Vector2> hashSet = new HashSet<Vector2>();
+            queue.Enqueue(startTileLocation);
+            int num = 0;
+            while (num <= 150 && queue.Count > 0)
+            {
+                Vector2 vector = queue.Dequeue();
+                if (this.terrainFeatures.ContainsKey(vector) && this.terrainFeatures[vector] is HoeDirt && (this.terrainFeatures[vector] as HoeDirt).crop != null && (this.terrainFeatures[vector] as HoeDirt).crop.programColored && (this.terrainFeatures[vector] as HoeDirt).crop.currentPhase >= (this.terrainFeatures[vector] as HoeDirt).crop.phaseDays.Count - 1 && !(this.terrainFeatures[vector] as HoeDirt).crop.dead)
+                {
+                    return (this.terrainFeatures[vector] as HoeDirt).crop;
+                }
+                foreach (Vector2 current in Utility.getAdjacentTileLocations(vector))
+                {
+                    if (!hashSet.Contains(current))
+                    {
+                        queue.Enqueue(current);
+                    }
+                }
+                hashSet.Add(vector);
+                num++;
+            }
+            return null;
         }
 
     }
