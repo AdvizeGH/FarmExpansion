@@ -23,7 +23,7 @@ namespace FarmExpansion.Framework
 {
     public class FEFramework
     {
-        private IModHelper helper;
+        internal IModHelper helper;
         private IMonitor monitor;
 
         private FarmExpansion farmExpansion;
@@ -90,7 +90,7 @@ namespace FarmExpansion.Framework
             }
             /*if (e.NewState.LeftButton == ButtonState.Pressed && e.PriorState.LeftButton != ButtonState.Pressed)
             {
-                this.Monitor.Log($"Current terrain features in area {farmExpansion.terrainFeatures.Count}");
+                this.monitor.Log($"Current terrain features in area {farmExpansion.terrainFeatures.Count}");
             }*/
         }
 
@@ -108,6 +108,33 @@ namespace FarmExpansion.Framework
             }
         }*/
 
+        internal void MenuEvents_MenuChanged(object sender, EventArgsClickableMenuChanged e)
+        {
+            if (!(e.NewMenu is NamingMenu))
+                return;
+            foreach (Building building in farmExpansion.buildings)
+            {
+                if (building.indoors != null)
+                {
+                    if (building.indoors == Game1.currentLocation)
+                    {
+                        Game1.getFarm().buildings.AddRange(farmExpansion.buildings);
+                    }
+                }
+            }
+        }
+
+        internal void MenuEvents_MenuClosed(object sender, EventArgsClickableMenuClosed e)
+        {
+            if (!(e.PriorMenu is NamingMenu))
+                return;
+
+            foreach (Building building in farmExpansion.buildings)
+            {
+                Game1.getFarm().buildings.Remove(building);
+            }
+        }
+
         internal void SaveEvents_AfterLoad(object sender, EventArgs e)
         {
             try
@@ -121,6 +148,8 @@ namespace FarmExpansion.Framework
                 ControlEvents.ControllerButtonPressed -= this.ControlEvents_ControllerButtonPressed;
                 ControlEvents.MouseChanged -= this.ControlEvents_MouseChanged;
                 //LocationEvents.CurrentLocationChanged -= this.LocationEvents_CurrentLocationChanged;
+                MenuEvents.MenuChanged -= this.MenuEvents_MenuChanged;
+                MenuEvents.MenuClosed -= this.MenuEvents_MenuClosed;
                 SaveEvents.AfterLoad -= this.SaveEvents_AfterLoad;
                 SaveEvents.BeforeSave -= this.SaveEvents_BeforeSave;
                 SaveEvents.AfterSave -= this.SaveEvents_AfterSave;
@@ -218,7 +247,7 @@ namespace FarmExpansion.Framework
             if (farmExpansion.isThereABuildingUnderConstruction() && !Utility.isFestivalDay(Game1.dayOfMonth, Game1.currentSeason))
             {
                 bool flag2 = false;
-                foreach (GameLocation location in Game1.locations/*locations*/)
+                foreach (GameLocation location in Game1.locations)
                 {
                     if (flag2)
                         break;

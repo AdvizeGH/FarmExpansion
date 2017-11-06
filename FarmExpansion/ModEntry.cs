@@ -16,6 +16,8 @@ namespace FarmExpansion
             ControlEvents.ControllerButtonPressed += framework.ControlEvents_ControllerButtonPressed;
             ControlEvents.MouseChanged += framework.ControlEvents_MouseChanged;
             //LocationEvents.CurrentLocationChanged += framework.LocationEvents_CurrentLocationChanged;
+            MenuEvents.MenuChanged += framework.MenuEvents_MenuChanged;
+            MenuEvents.MenuClosed += framework.MenuEvents_MenuClosed;
             SaveEvents.AfterLoad += framework.SaveEvents_AfterLoad;
             SaveEvents.BeforeSave += framework.SaveEvents_BeforeSave;
             SaveEvents.AfterSave += framework.SaveEvents_AfterSave;
