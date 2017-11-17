@@ -461,7 +461,7 @@ namespace FarmExpansion
             Vector2 vector = new Vector2((float)tileLocation.X, (float)tileLocation.Y);
             if (this.objects.ContainsKey(vector) && this.objects[vector].Type != null)
             {
-                if (this.objects.ContainsKey(vector) && (this.objects[vector].Type.Equals("Crafting") || this.objects[vector].Type.Equals("interactive")) && this.objects[vector].name.Equals("Bee House"))
+                if ((this.objects[vector].Type.Equals("Crafting") || this.objects[vector].Type.Equals("interactive")) && this.objects[vector].name.Equals("Bee House"))
                 {
                     Object beeHive = this.objects[vector];
                     if (!beeHive.readyForHarvest)
