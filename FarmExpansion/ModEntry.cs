@@ -1,13 +1,24 @@
 ﻿using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using FarmExpansion.Framework;
+using System.Collections.Generic;
 
 namespace FarmExpansion
 {
 
-    public class ModEntry : Mod
+    public class ModEntry : Mod, IAssetEditor
     {
         private FEFramework framework;
+
+        public bool CanEdit<T>(IAssetInfo asset)
+        {
+            return asset.AssetNameEquals(@"Data\Locations");
+        }
+
+        public void Edit<T>(IAssetData asset)
+        {
+            asset.AsDictionary<string, string>().Data.Add(new KeyValuePair<string, string>("FarmExpansion", "-1/-1/-1/-1/-1/-1/-1/-1/382 .05 770 .1 390 .25 330 1"));
+        }
 
         public override void Entry(IModHelper helper)
         {
