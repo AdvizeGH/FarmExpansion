@@ -24,7 +24,7 @@ namespace FarmExpansion.Framework
     public class FEFramework
     {
         internal IModHelper helper;
-        private IMonitor monitor;
+        internal IMonitor monitor;
 
         private FarmExpansion farmExpansion;
         private Map map;
@@ -660,7 +660,7 @@ namespace FarmExpansion.Framework
                                     new Response("Leave", Game1.content.LoadString("Strings\\Locations:ScienceHouse_CarpenterMenu_Leave", new object[0]))
                                 };
                             }
-                            Game1.currentLocation.createQuestionDialogue(Game1.content.LoadString("Strings\\Locations:ScienceHouse_CarpenterMenu"), answerChoices, carpenter2, null);
+                            Game1.currentLocation.createQuestionDialogue(Game1.content.LoadString("Strings\\Locations:ScienceHouse_CarpenterMenu"), answerChoices, carpenter2);
                             return;
                         }
                         Game1.activeClickableMenu = new ShopMenu(Utility.getCarpenterStock(), 0, "Robin");
@@ -691,7 +691,7 @@ namespace FarmExpansion.Framework
                         new Response("Purchase", Game1.content.LoadString("Strings\\Locations:AnimalShop_Marnie_Animals", new object[0])),
                         new Response("Leave", Game1.content.LoadString("Strings\\Locations:AnimalShop_Marnie_Leave", new object[0])),
                     };
-                    Game1.currentLocation.createQuestionDialogue("", answerChoices, animalShop2, null);
+                    Game1.currentLocation.createQuestionDialogue("", answerChoices, animalShop2);
                     return;
                 }
             }
