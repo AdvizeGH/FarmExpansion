@@ -18,6 +18,7 @@ using xTile;
 using xTile.Dimensions;
 using xTile.Layers;
 using xTile.Tiles;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace FarmExpansion.Framework
 {
@@ -110,15 +111,52 @@ namespace FarmExpansion.Framework
 
         internal void MenuEvents_MenuChanged(object sender, EventArgsClickableMenuChanged e)
         {
-            if (!(e.NewMenu is NamingMenu))
-                return;
-            foreach (Building building in farmExpansion.buildings)
+            if (e.NewMenu is GameMenu)
             {
-                if (building.indoors != null)
+                MapPage mp = null;
+
+                foreach (IClickableMenu page in this.helper.Reflection.GetPrivateValue<List<IClickableMenu>>(Game1.activeClickableMenu, "pages"))
                 {
-                    if (building.indoors == Game1.currentLocation)
+                    if (!(page is MapPage))
+                        continue;
+                    mp = page as MapPage;
+                    break;
+                }
+                if (mp == null)
+                    return;
+
+                int mapX = this.helper.Reflection.GetPrivateValue<int>(mp, "mapX");
+                int mapY = this.helper.Reflection.GetPrivateValue<int>(mp, "mapY");
+                Rectangle locationOnMap = new Rectangle(mapX + 156, mapY + 272, 100, 80);
+
+                mp.points.Add(new ClickableComponent(locationOnMap, "Farm Expansion"));
+                
+                foreach (ClickableComponent cc in mp.points)
+                {
+                    if (cc.myID != 1030)
+                        continue;
+                    
+                    cc.bounds.Width -= 64;
+                    break;
+                }
+
+                if (Game1.currentLocation == farmExpansion)
+                {
+                    this.helper.Reflection.GetPrivateField<Vector2>(mp, "playerMapPosition").SetValue(new Vector2(mapX + 50 * Game1.pixelZoom, mapY + 75 * Game1.pixelZoom));
+                    this.helper.Reflection.GetPrivateField<string>(mp, "playerLocationName").SetValue("Farm Expansion");
+                }
+            }
+
+            if (e.NewMenu is NamingMenu)
+            {
+                foreach (Building building in farmExpansion.buildings)
+                {
+                    if (building.indoors != null)
                     {
-                        Game1.getFarm().buildings.AddRange(farmExpansion.buildings);
+                        if (building.indoors == Game1.currentLocation)
+                        {
+                            Game1.getFarm().buildings.AddRange(farmExpansion.buildings);
+                        }
                     }
                 }
             }
@@ -126,12 +164,12 @@ namespace FarmExpansion.Framework
 
         internal void MenuEvents_MenuClosed(object sender, EventArgsClickableMenuClosed e)
         {
-            if (!(e.PriorMenu is NamingMenu))
-                return;
-
-            foreach (Building building in farmExpansion.buildings)
+            if (e.PriorMenu is NamingMenu)
             {
-                Game1.getFarm().buildings.Remove(building);
+                foreach (Building building in farmExpansion.buildings)
+                {
+                    Game1.getFarm().buildings.Remove(building);
+                }
             }
         }
 
