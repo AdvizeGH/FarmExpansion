@@ -58,8 +58,8 @@ namespace FarmExpansion
         {
             framework = new FEFramework(helper, Monitor);
             //ControlEvents.KeyPressed += framework.ControlEvents_KeyPress;
-            ControlEvents.ControllerButtonPressed += framework.ControlEvents_ControllerButtonPressed;
-            ControlEvents.MouseChanged += framework.ControlEvents_MouseChanged;
+            //ControlEvents.ControllerButtonPressed += framework.ControlEvents_ControllerButtonPressed;
+            //ControlEvents.MouseChanged += framework.ControlEvents_MouseChanged;
             //LocationEvents.CurrentLocationChanged += framework.LocationEvents_CurrentLocationChanged;
             MenuEvents.MenuChanged += framework.MenuEvents_MenuChanged;
             MenuEvents.MenuClosed += framework.MenuEvents_MenuClosed;
