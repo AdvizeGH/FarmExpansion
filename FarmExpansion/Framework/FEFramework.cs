@@ -33,6 +33,10 @@ namespace FarmExpansion.Framework
         private NPC robin;
         internal FEConfig config;
 
+        internal bool IsTreeTransplantLoaded;
+        private IClickableMenu menuOverride;
+        private bool overridableMenuActive;
+
         public FEFramework(IModHelper helper, IMonitor monitor)
         {
             this.helper = helper;
@@ -86,15 +90,26 @@ namespace FarmExpansion.Framework
         [Obsolete("Obsolete as of 3.1")]
         internal void ControlEvents_MouseChanged(object sender, EventArgsMouseStateChanged e)
         {
-            if (!Context.IsWorldReady) return;
+            if (!overridableMenuActive)
+                return;
+            if (e.NewState.LeftButton == ButtonState.Pressed && e.PriorState.LeftButton != ButtonState.Pressed)
+            {
+                menuOverride.receiveLeftClick(Game1.getMouseX(), Game1.getMouseY(), false);
+            }
+            /*if (!Context.IsWorldReady) return;
             if (e.NewState.RightButton == ButtonState.Pressed && e.PriorState.RightButton != ButtonState.Pressed)
             {
                 CheckForAction();
-            }
+            }*/
             /*if (e.NewState.LeftButton == ButtonState.Pressed && e.PriorState.LeftButton != ButtonState.Pressed)
             {
                 this.monitor.Log($"Current terrain features in area {farmExpansion.terrainFeatures.Count}");
             }*/
+        }
+
+        internal void GraphicsEvents_OnPostRenderGuiEvent(object sender, EventArgs e)
+        {
+            menuOverride.draw(Game1.spriteBatch);
         }
 
         /*internal void LocationEvents_CurrentLocationChanged(object sender, EventArgsCurrentLocationChanged e)
@@ -171,6 +186,16 @@ namespace FarmExpansion.Framework
                         Game1.getFarm().buildings.AddRange(farmExpansion.buildings);
                 return;
             }
+            if (IsTreeTransplantLoaded)
+                if (e.NewMenu.GetType().FullName.Equals("TreeTransplant.TreeTransplantMenu"))
+                {
+                    menuOverride = new FETreeTransplantMenu(this, e.NewMenu);
+                    overridableMenuActive = true;
+                    GraphicsEvents.OnPostRenderGuiEvent += this.GraphicsEvents_OnPostRenderGuiEvent;
+                    ControlEvents.MouseChanged += this.ControlEvents_MouseChanged;
+                }
+                    
+            
         }
 
         internal void MenuEvents_MenuClosed(object sender, EventArgsClickableMenuClosed e)
@@ -178,6 +203,14 @@ namespace FarmExpansion.Framework
             if (e.PriorMenu is NamingMenu)
                 foreach (Building building in farmExpansion.buildings)
                     Game1.getFarm().buildings.Remove(building);
+            if (IsTreeTransplantLoaded)
+                if (e.PriorMenu.GetType().FullName.Equals("TreeTransplant.TreeTransplantMenu"))
+                {
+                    ControlEvents.MouseChanged -= this.ControlEvents_MouseChanged;
+                    GraphicsEvents.OnPostRenderGuiEvent -= this.GraphicsEvents_OnPostRenderGuiEvent;
+                    overridableMenuActive = false;
+                    menuOverride = null;
+                }
         }
 
         internal void SaveEvents_AfterLoad(object sender, EventArgs e)

@@ -51,6 +51,7 @@
     <Compile Include="Framework\TileLayer.cs" />
     <Compile Include="Menus\FECarpenterMenu.cs" />
     <Compile Include="Menus\FEPurchaseAnimalsMenu.cs" />
+    <Compile Include="Menus\FETreeTransplantMenu.cs" />
     <Compile Include="ModEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

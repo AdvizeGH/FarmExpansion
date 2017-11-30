@@ -57,6 +57,7 @@ namespace FarmExpansion
         public override void Entry(IModHelper helper)
         {
             framework = new FEFramework(helper, Monitor);
+            framework.IsTreeTransplantLoaded = helper.ModRegistry.IsLoaded("TreeTransplant");// && helper.ModRegistry.Get("TreeTransplant").Version.IsNewerThan("1.0.0");
             //ControlEvents.KeyPressed += framework.ControlEvents_KeyPress;
             //ControlEvents.ControllerButtonPressed += framework.ControlEvents_ControllerButtonPressed;
             //ControlEvents.MouseChanged += framework.ControlEvents_MouseChanged;
