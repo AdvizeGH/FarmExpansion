@@ -1,5 +1,6 @@
 ﻿using FarmExpansion.Menus;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,6 @@ using StardewValley.Menus;
 using StardewValley.TerrainFeatures;
 using Object = StardewValley.Object;
 using xTile;
-using xTile.Dimensions;
 using xTile.Layers;
 using xTile.Tiles;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
@@ -34,6 +34,7 @@ namespace FarmExpansion.Framework
         internal FEConfig config;
 
         internal bool IsTreeTransplantLoaded;
+        internal Texture2D TreeTransplantFarmIcon;
         private IClickableMenu menuOverride;
         private bool overridableMenuActive;
 
@@ -77,54 +78,21 @@ namespace FarmExpansion.Framework
             }
         }*/
 
-        [Obsolete("Obsolete as of 3.1")]
-        internal void ControlEvents_ControllerButtonPressed(object sender, EventArgsControllerButtonPressed e)
-        {
-            if (!Context.IsWorldReady) return;
-            if (e.ButtonPressed == Buttons.A)
-            {
-                CheckForAction();
-            }
-        }
-
-        [Obsolete("Obsolete as of 3.1")]
         internal void ControlEvents_MouseChanged(object sender, EventArgsMouseStateChanged e)
         {
             if (!overridableMenuActive)
                 return;
+
+            menuOverride.performHoverAction(Game1.getMouseX(), Game1.getMouseY());
+
             if (e.NewState.LeftButton == ButtonState.Pressed && e.PriorState.LeftButton != ButtonState.Pressed)
-            {
                 menuOverride.receiveLeftClick(Game1.getMouseX(), Game1.getMouseY(), false);
-            }
-            /*if (!Context.IsWorldReady) return;
-            if (e.NewState.RightButton == ButtonState.Pressed && e.PriorState.RightButton != ButtonState.Pressed)
-            {
-                CheckForAction();
-            }*/
-            /*if (e.NewState.LeftButton == ButtonState.Pressed && e.PriorState.LeftButton != ButtonState.Pressed)
-            {
-                this.monitor.Log($"Current terrain features in area {farmExpansion.terrainFeatures.Count}");
-            }*/
         }
 
-        internal void GraphicsEvents_OnPostRenderGuiEvent(object sender, EventArgs e)
+        internal void GraphicsEvents_OnPreRenderGuiEvent(object sender, EventArgs e)
         {
             menuOverride.draw(Game1.spriteBatch);
         }
-
-        /*internal void LocationEvents_CurrentLocationChanged(object sender, EventArgsCurrentLocationChanged e)
-        {
-            if (e.NewLocation?.Name == "FarmExpansion")
-            {
-                farmExpansion.terrainFeatures.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(TerrainFeaturesChanged);
-                return;
-            }
-            if (e.PriorLocation?.Name == "FarmExpansion")
-            {
-                farmExpansion.terrainFeatures.CollectionChanged -= new System.Collections.Specialized.NotifyCollectionChangedEventHandler(TerrainFeaturesChanged);
-                return;
-            }
-        }*/
 
         internal void MenuEvents_MenuChanged(object sender, EventArgsClickableMenuChanged e)
         {
@@ -189,13 +157,23 @@ namespace FarmExpansion.Framework
             if (IsTreeTransplantLoaded)
                 if (e.NewMenu.GetType().FullName.Equals("TreeTransplant.TreeTransplantMenu"))
                 {
+                    if (TreeTransplantFarmIcon == null)
+                    {
+                        try
+                        {
+                            this.TreeTransplantFarmIcon = this.helper.Content.Load<Texture2D>("TreeTransplantFarmIcon.png");
+                        }
+                        catch(Exception ex)
+                        {
+                            this.monitor.Log($"Could not load the menu icon for TreeTransplant compatibility.\n{ex}");
+                            return;
+                        }
+                    }
                     menuOverride = new FETreeTransplantMenu(this, e.NewMenu);
                     overridableMenuActive = true;
-                    GraphicsEvents.OnPostRenderGuiEvent += this.GraphicsEvents_OnPostRenderGuiEvent;
+                    GraphicsEvents.OnPreRenderGuiEvent += this.GraphicsEvents_OnPreRenderGuiEvent;
                     ControlEvents.MouseChanged += this.ControlEvents_MouseChanged;
                 }
-                    
-            
         }
 
         internal void MenuEvents_MenuClosed(object sender, EventArgsClickableMenuClosed e)
@@ -207,7 +185,7 @@ namespace FarmExpansion.Framework
                 if (e.PriorMenu.GetType().FullName.Equals("TreeTransplant.TreeTransplantMenu"))
                 {
                     ControlEvents.MouseChanged -= this.ControlEvents_MouseChanged;
-                    GraphicsEvents.OnPostRenderGuiEvent -= this.GraphicsEvents_OnPostRenderGuiEvent;
+                    GraphicsEvents.OnPreRenderGuiEvent -= this.GraphicsEvents_OnPreRenderGuiEvent;
                     overridableMenuActive = false;
                     menuOverride = null;
                 }
@@ -357,50 +335,6 @@ namespace FarmExpansion.Framework
             else
             {
                 farmExpansion.removeCarpenter();
-            }
-        }
-
-        /*private void TerrainFeaturesChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            monitor.Log($"New terrain features in area {farmExpansion.terrainFeatures.Count}");
-            monitor.Log($"terrainFeatures changed, {e.OldItems?.Count} items removed, {e.NewItems?.Count} added");
-        }*/
-
-        [Obsolete("Obsolete as of 3.1")]
-        private void CheckForAction()
-        {
-            if (Game1.player.UsingTool || Game1.pickingTool || Game1.menuUp || (Game1.eventUp && !Game1.currentLocation.currentEvent.playerControlSequence) || Game1.nameSelectUp || Game1.numberOfSelectedItems != -1 || Game1.fadeToBlack || Game1.activeClickableMenu != null)
-                return;
-
-            // get the activated tile
-            Vector2 grabTile = new Vector2(Game1.getOldMouseX() + Game1.viewport.X, Game1.getOldMouseY() + Game1.viewport.Y) / Game1.tileSize;
-            if (!Utility.tileWithinRadiusOfPlayer((int)grabTile.X, (int)grabTile.Y, 1, Game1.player))
-                grabTile = Game1.player.GetGrabTile();
-
-            // check tile action
-            xTile.Tiles.Tile tile = Game1.currentLocation.map.GetLayer("Buildings").PickTile(new Location((int)grabTile.X * Game1.tileSize, (int)grabTile.Y * Game1.tileSize), Game1.viewport.Size);
-            xTile.ObjectModel.PropertyValue propertyValue = null;
-            tile?.Properties.TryGetValue("Action", out propertyValue);
-            if (propertyValue != null)
-            {
-                /*if (propertyValue == "TestProperty")
-                {
-                    Game1.drawObjectDialogue("Cottage interior not yet implemented.");
-                }*/
-                if (propertyValue == "FECarpenter")
-                {
-                    if (Game1.player.getTileY() > grabTile.Y)
-                    {
-                        carpenter(new Location((int)grabTile.X, (int)grabTile.Y));
-                    }
-                }
-                if (propertyValue == "FEAnimalShop")
-                {
-                    if (Game1.player.getTileY() > grabTile.Y)
-                    {
-                        animalShop(new Location((int)grabTile.X, (int)grabTile.Y));
-                    }
-                }
             }
         }
 
@@ -671,130 +605,6 @@ namespace FarmExpansion.Framework
             farmExpansion.warps.Add(new Warp(48, 4, "Farm", 0, warpYLocA, false));
             farmExpansion.warps.Add(new Warp(48, 5, "Farm", 0, warpYLocB, false));
             farmExpansion.warps.Add(new Warp(48, 6, "Farm", 0, warpYLocC, false));
-
-            //Game1.getLocationFromName("ScienceHouse").setTileProperty(8, 19, "Buildings", "Action", "FECarpenter");
-            //Game1.getLocationFromName("AnimalShop").setTileProperty(12, 15, "Buildings", "Action", "FEAnimalShop");
-        }
-
-        [Obsolete("Obsolete as of 3.1")]
-        private void carpenter(Location tileLocation)
-        {
-            if (Game1.player.currentUpgrade == null)
-            {
-                foreach (NPC current in Game1.currentLocation.characters)
-                {
-                    if (current.name.Equals("Robin"))
-                    {
-                        if (Vector2.Distance(current.getTileLocation(), new Vector2(tileLocation.X, tileLocation.Y)) > 3f)
-                            return;
-
-                        current.faceDirection(2);
-                        if (Game1.player.daysUntilHouseUpgrade < 0 && !Game1.getFarm().isThereABuildingUnderConstruction() && !farmExpansion.isThereABuildingUnderConstruction())
-                        {
-                            Response[] answerChoices;
-                            if (Game1.player.houseUpgradeLevel < 3)
-                            {
-                                answerChoices = new Response[]
-                                {
-                                    new Response("Shop", Game1.content.LoadString("Strings\\Locations:ScienceHouse_CarpenterMenu_Shop", new object[0])),
-                                    new Response("Upgrade", Game1.content.LoadString("Strings\\Locations:ScienceHouse_CarpenterMenu_UpgradeHouse", new object[0])),
-                                    new Response("Construct", Game1.content.LoadString("Strings\\Locations:ScienceHouse_CarpenterMenu_Construct", new object[0])),
-                                    new Response("Leave", Game1.content.LoadString("Strings\\Locations:ScienceHouse_CarpenterMenu_Leave", new object[0]))
-                                };
-                            }
-                            else
-                            {
-                                answerChoices = new Response[]
-                                {
-                                    new Response("Shop", Game1.content.LoadString("Strings\\Locations:ScienceHouse_CarpenterMenu_Shop", new object[0])),
-                                    new Response("Construct", Game1.content.LoadString("Strings\\Locations:ScienceHouse_CarpenterMenu_Construct", new object[0])),
-                                    new Response("Leave", Game1.content.LoadString("Strings\\Locations:ScienceHouse_CarpenterMenu_Leave", new object[0]))
-                                };
-                            }
-                            Game1.currentLocation.createQuestionDialogue(Game1.content.LoadString("Strings\\Locations:ScienceHouse_CarpenterMenu"), answerChoices, carpenter2);
-                            return;
-                        }
-                        Game1.activeClickableMenu = new ShopMenu(Utility.getCarpenterStock(), 0, "Robin");
-                        return;
-                    }
-                }
-                if (Game1.shortDayNameFromDayOfSeason(Game1.dayOfMonth).Equals("Tue"))
-                    Game1.drawObjectDialogue(Game1.content.LoadString("Strings\\Locations:ScienceHouse_RobinAbsent", new object[0]).Replace('\n', '^'));
-            }
-        }
-
-        [Obsolete("Obsolete as of 3.1")]
-        private void animalShop(Location tileLocation)
-        {
-            foreach (NPC current in Game1.currentLocation.characters)
-            {
-                if (current.name.Equals("Marnie"))
-                {
-                    if (!current.getTileLocation().Equals(new Vector2((float)tileLocation.X, (float)(tileLocation.Y - 1))))
-                        return;
-
-                    current.faceDirection(2);
-                    Response[] answerChoices = new Response[]
-                    {
-                        new Response("Supplies", Game1.content.LoadString("Strings\\Locations:AnimalShop_Marnie_Supplies", new object[0])),
-                        new Response("Purchase", Game1.content.LoadString("Strings\\Locations:AnimalShop_Marnie_Animals", new object[0])),
-                        new Response("Leave", Game1.content.LoadString("Strings\\Locations:AnimalShop_Marnie_Leave", new object[0])),
-                    };
-                    Game1.currentLocation.createQuestionDialogue("", answerChoices, animalShop2);
-                    return;
-                }
-            }
-            if (Game1.shortDayNameFromDayOfSeason(Game1.dayOfMonth).Equals("Tue"))
-                Game1.drawObjectDialogue(Game1.content.LoadString("Strings\\Locations:AnimalShop_Marnie_Absent", new object[0]).Replace('\n', '^'));
-        }
-
-        [Obsolete("Obsolete as of 3.1")]
-        private void carpenter2(StardewValley.Farmer who, string whichAnswer)
-        {
-            switch (whichAnswer)
-            {
-                case "Shop":
-                    Game1.player.forceCanMove();
-                    Game1.activeClickableMenu = new ShopMenu(Utility.getCarpenterStock(), 0, "Robin");
-                    return;
-                case "Upgrade":
-                    switch (Game1.player.houseUpgradeLevel)
-                    {
-                        case 0:
-                            Game1.currentLocation.createQuestionDialogue(Game1.parseText(Game1.content.LoadString("Strings\\Locations:ScienceHouse_Carpenter_UpgradeHouse1", new object[0])), Game1.currentLocation.createYesNoResponses(), "upgrade");
-                            return;
-                        case 1:
-                            Game1.currentLocation.createQuestionDialogue(Game1.parseText(Game1.content.LoadString("Strings\\Locations:ScienceHouse_Carpenter_UpgradeHouse2", new object[0])), Game1.currentLocation.createYesNoResponses(), "upgrade");
-                            return;
-                        case 2:
-                            Game1.currentLocation.createQuestionDialogue(Game1.parseText(Game1.content.LoadString("Strings\\Locations:ScienceHouse_Carpenter_UpgradeHouse3", new object[0])), Game1.currentLocation.createYesNoResponses(), "upgrade");
-                            return;
-                        default:
-                            return;
-                    }
-                case "Construct":
-                    Game1.activeClickableMenu = new FECarpenterMenu(this);
-                    return;
-                default:
-                    return;
-            }
-        }
-
-        [Obsolete("Obsolete as of 3.1")]
-        private void animalShop2(StardewValley.Farmer who, string whichAnswer)
-        {
-            switch (whichAnswer)
-            {
-                case "Supplies":
-                    Game1.activeClickableMenu = new ShopMenu(Utility.getAnimalShopStock(), 0, "Marnie");
-                    return;
-                case "Purchase":
-                    Game1.player.forceCanMove();
-                    Game1.activeClickableMenu = new FEPurchaseAnimalsMenu(this);
-                    return;
-                default:
-                    return;
-            }
         }
 
         private void robinHammerSound(StardewValley.Farmer who)

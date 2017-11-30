@@ -2,10 +2,6 @@
 using StardewValley;
 using StardewValley.Menus;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using xTile.Dimensions;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,41 +13,25 @@ namespace FarmExpansion.Menus
         FEFramework framework;
         private IClickableMenu TreeTransplantMenu;
         private ClickableTextureComponent swapFarmButton;
+        private Rectangle previousClientBounds;
 
-
-        /* Texture position and texture used for icon are placeholders currently*/
         public FETreeTransplantMenu(FEFramework framework, IClickableMenu menu)
         {
             this.framework = framework;
             this.TreeTransplantMenu = menu;
 
-            swapFarmButton = new ClickableTextureComponent(
-                new Rectangle(
-                    xPositionOnScreen + width - IClickableMenu.borderWidth - IClickableMenu.spaceToClearSideBorder - (Game1.tileSize * 4) - (Game1.tileSize / 4),
-                    yPositionOnScreen + IClickableMenu.spaceToClearTopBorder + Game1.tileSize,
-                    Game1.tileSize,
-                    Game1.tileSize),
-                Game1.mouseCursors,
-                new Rectangle(0, 0, 64, 64),
-                1.0f);
+            this.assignClientBounds();
 
-            //resetBounds();
-            swapFarmButton.bounds.X = (Game1.viewport.Width - Game1.tileSize * 2) - (int)(Game1.tileSize / 0.75) - (int)(Game1.tileSize / 0.75);
-            swapFarmButton.bounds.Y = (Game1.viewport.Height - Game1.tileSize * 2) - (int)(Game1.tileSize / 0.75) - (int)(Game1.tileSize / 0.75);
+            this.swapFarmButton = new ClickableTextureComponent(new Rectangle(0, 0, Game1.tileSize, Game1.tileSize), framework.TreeTransplantFarmIcon, new Rectangle(0, 0, 64, 64), 1.0f);
+
+            resetBounds();
         }
 
-        //private void resetBounds()
-        //{
-        //    swapFarmButton = new ClickableTextureComponent(
-        //        new Rectangle(
-        //            xPositionOnScreen + width - IClickableMenu.borderWidth - IClickableMenu.spaceToClearSideBorder - (Game1.tileSize * 4) - (Game1.tileSize / 4),
-        //            yPositionOnScreen + IClickableMenu.spaceToClearTopBorder + Game1.tileSize,
-        //            Game1.tileSize,
-        //            Game1.tileSize),
-        //        Game1.mouseCursors,
-        //        new Rectangle(0, 0, 64, 64),
-        //        1.0f);
-        //}
+        private void resetBounds()
+        {
+            swapFarmButton.bounds.X = (Game1.viewport.Width - Game1.tileSize * 2) - (int)(Game1.tileSize / 0.75) - (int)(Game1.tileSize / 0.75);
+            swapFarmButton.bounds.Y = (Game1.viewport.Height - Game1.tileSize * 2);
+        }
 
         public override void receiveLeftClick(int x, int y, bool playSound = true)
         {
@@ -75,7 +55,22 @@ namespace FarmExpansion.Menus
 
         public override void draw(SpriteBatch b)
         {
+            if (Game1.globalFade)
+                return;
+
+            if (Game1.game1.Window.ClientBounds.X != previousClientBounds.X || Game1.game1.Window.ClientBounds.Y != previousClientBounds.Y || Game1.game1.Window.ClientBounds.Width != previousClientBounds.Width || Game1.game1.Window.ClientBounds.Height != previousClientBounds.Height)
+            {
+                assignClientBounds();
+                resetBounds();
+            }
+
             swapFarmButton.draw(b);
+        }
+
+        private void assignClientBounds()
+        {
+            Rectangle newClientBounds = Game1.game1.Window.ClientBounds;
+            previousClientBounds = new Rectangle(newClientBounds.X, newClientBounds.Y, newClientBounds.Width, newClientBounds.Height);
         }
 
         private void handleSwapFarmAction()
@@ -84,12 +79,6 @@ namespace FarmExpansion.Menus
                 Game1.globalFadeToBlack(new Game1.afterFadeFunction(swapFarm));
             else
                 framework.helper.Reflection.GetPrivateMethod(TreeTransplantMenu, "handleCancelAction").Invoke();
-            //bool selectedTree = framework.helper.Reflection.GetPrivateField<object>(TreeTransplantMenu, "selectedTree") != null;
-            //if (selectedTree)
-            //{
-            //    framework.helper.Reflection.GetPrivateField<object>(TreeTransplantMenu, "selectedTree").SetValue(null);
-            //    Game1.playSound("shwip");
-            //}
         }
 
         private void swapFarm()
@@ -100,8 +89,9 @@ namespace FarmExpansion.Menus
             Game1.currentLocation = Game1.currentLocation.GetType().FullName.Contains("Expansion") ? Game1.getFarm() : Game1.getLocationFromName("FarmExpansion");
             // reset the location for our entry
             Game1.currentLocation.resetForPlayerEntry();
-            // freeze the viewport
-            //Game1.viewportFreeze = true;
+            // ensure the TreeTransplant menu is checking the right farm when determining whether a tree can be placed
+            Farm farm = framework.helper.Reflection.GetPrivateValue<Farm>(TreeTransplantMenu, "farm");
+            framework.helper.Reflection.GetPrivateField<Farm>(TreeTransplantMenu, "farm").SetValue(framework.swapFarm(farm));
             // set the new viewport
             Game1.viewport.Location = new Location(49 * Game1.tileSize, 5 * Game1.tileSize);
             // pan the screen
