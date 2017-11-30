@@ -201,9 +201,6 @@ namespace FarmExpansion.Framework
             catch (Exception ex)
             {
                 //ControlEvents.KeyPressed -= this.ControlEvents_KeyPress;
-                //ControlEvents.ControllerButtonPressed -= this.ControlEvents_ControllerButtonPressed;
-                //ControlEvents.MouseChanged -= this.ControlEvents_MouseChanged;
-                //LocationEvents.CurrentLocationChanged -= this.LocationEvents_CurrentLocationChanged;
                 MenuEvents.MenuChanged -= this.MenuEvents_MenuChanged;
                 MenuEvents.MenuClosed -= this.MenuEvents_MenuClosed;
                 SaveEvents.AfterLoad -= this.SaveEvents_AfterLoad;
