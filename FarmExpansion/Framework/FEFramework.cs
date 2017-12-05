@@ -241,7 +241,7 @@ namespace FarmExpansion.Framework
             }
 
             Game1.locations.Add(farmExpansion);
-            PatchMap(Game1.getFarm());
+            PatchMap();
             RepairBuildingWarps();
         }
 
@@ -451,8 +451,9 @@ namespace FarmExpansion.Framework
             }
         }
 
-        private void PatchMap(GameLocation gl)
+        private void PatchMap()
         {
+            GameLocation gl = config.useBackwoodsEntrance ? Game1.getLocationFromName("Backwoods") : Game1.getFarm();
             string tsID = "";
             foreach (TileSheet ts in gl.map.TileSheets)
             {
@@ -469,6 +470,93 @@ namespace FarmExpansion.Framework
             }
             int warpYLocA, warpYLocB, warpYLocC;
             List<Tile> tiles = new List<Tile>();
+
+            if (config.useBackwoodsEntrance)
+            {
+                tiles.Add(new Tile(TileLayer.Back, 10, 25, 200, tsID)); tiles.Add(new Tile(TileLayer.Back, 11, 25, 202, tsID)); tiles.Add(new Tile(TileLayer.Back, 0, 26, 537, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 1, 26, 537, tsID)); tiles.Add(new Tile(TileLayer.Back, 2, 26, 537, tsID)); tiles.Add(new Tile(TileLayer.Back, 3, 26, 537, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 4, 26, 537, tsID)); tiles.Add(new Tile(TileLayer.Back, 5, 26, 537, tsID)); tiles.Add(new Tile(TileLayer.Back, 6, 26, 537, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 7, 26, 537, tsID)); tiles.Add(new Tile(TileLayer.Back, 8, 26, 537, tsID)); tiles.Add(new Tile(TileLayer.Back, 9, 26, 537, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 10, 26, 561, tsID)); tiles.Add(new Tile(TileLayer.Back, 11, 26, 176, tsID)); tiles.Add(new Tile(TileLayer.Back, 12, 26, 176, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 0, 27, 562, tsID)); tiles.Add(new Tile(TileLayer.Back, 1, 27, 562, tsID)); tiles.Add(new Tile(TileLayer.Back, 2, 27, 562, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 3, 27, 562, tsID)); tiles.Add(new Tile(TileLayer.Back, 4, 27, 562, tsID)); tiles.Add(new Tile(TileLayer.Back, 5, 27, 562, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 6, 27, 562, tsID)); tiles.Add(new Tile(TileLayer.Back, 7, 27, 562, tsID)); tiles.Add(new Tile(TileLayer.Back, 8, 27, 562, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 9, 27, 562, tsID)); tiles.Add(new Tile(TileLayer.Back, 10, 27, 565, tsID)); tiles.Add(new Tile(TileLayer.Back, 11, 27, 176, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 12, 27, 176, tsID)); tiles.Add(new Tile(TileLayer.Back, 0, 28, 176, tsID)); tiles.Add(new Tile(TileLayer.Back, 1, 28, 176, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 2, 28, 176, tsID)); tiles.Add(new Tile(TileLayer.Back, 3, 28, 176, tsID)); tiles.Add(new Tile(TileLayer.Back, 4, 28, 176, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 5, 28, 176, tsID)); tiles.Add(new Tile(TileLayer.Back, 6, 28, 176, tsID)); tiles.Add(new Tile(TileLayer.Back, 7, 28, 176, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 8, 28, 176, tsID)); tiles.Add(new Tile(TileLayer.Back, 9, 28, 176, tsID)); tiles.Add(new Tile(TileLayer.Back, 10, 28, 176, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 11, 28, 176, tsID)); tiles.Add(new Tile(TileLayer.Back, 12, 28, 176, tsID)); tiles.Add(new Tile(TileLayer.Back, 0, 29, 176, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 1, 29, 176, tsID)); tiles.Add(new Tile(TileLayer.Back, 2, 29, 176, tsID)); tiles.Add(new Tile(TileLayer.Back, 3, 29, 176, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 4, 29, 176, tsID)); tiles.Add(new Tile(TileLayer.Back, 5, 29, 176, tsID)); tiles.Add(new Tile(TileLayer.Back, 6, 29, 176, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 7, 29, 176, tsID)); tiles.Add(new Tile(TileLayer.Back, 8, 29, 176, tsID)); tiles.Add(new Tile(TileLayer.Back, 9, 29, 176, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 10, 29, 176, tsID)); tiles.Add(new Tile(TileLayer.Back, 11, 29, 176, tsID)); tiles.Add(new Tile(TileLayer.Back, 12, 29, 176, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 0, 31, 351, tsID)); tiles.Add(new Tile(TileLayer.Back, 1, 31, 351, tsID)); tiles.Add(new Tile(TileLayer.Back, 2, 31, 351, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 3, 31, 351, tsID)); tiles.Add(new Tile(TileLayer.Back, 4, 31, 351, tsID)); tiles.Add(new Tile(TileLayer.Back, 5, 31, 351, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 6, 31, 351, tsID)); tiles.Add(new Tile(TileLayer.Back, 0, 32, 351, tsID)); tiles.Add(new Tile(TileLayer.Back, 1, 32, 351, tsID));
+                tiles.Add(new Tile(TileLayer.Back, 2, 32, 351, tsID)); tiles.Add(new Tile(TileLayer.Back, 3, 32, 351, tsID)); tiles.Add(new Tile(TileLayer.Back, 4, 32, 351, tsID));
+
+                tiles.Add(new Tile(TileLayer.Buildings, 10, 22, 444, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 0, 23, 467, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 1, 23, 468, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 2, 23, 467, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 3, 23, 468, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 4, 23, 467, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 5, 23, 468, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 6, 23, 467, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 7, 23, 468, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 8, 23, 467, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 9, 23, 468, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 10, 23, 469, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 0, 24, 492, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 1, 24, 493, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 2, 24, 492, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 3, 24, 493, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 4, 24, 492, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 5, 24, 493, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 6, 24, 492, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 7, 24, 493, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 8, 24, 492, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 9, 24, 493, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 10, 24, 494, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 0, 25, 517, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 1, 25, 518, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 2, 25, 517, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 3, 25, 518, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 4, 25, 517, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 5, 25, 518, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 6, 25, 517, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 7, 25, 518, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 8, 25, 517, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 9, 25, 518, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 10, 25, 519, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 0, 26, 542, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 1, 26, 543, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 2, 26, 542, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 3, 26, 543, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 4, 26, 542, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 5, 26, 543, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 6, 26, 542, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 7, 26, 543, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 8, 26, 542, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 9, 26, 543, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 10, 26, 544, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 0, 27, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 1, 27, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 2, 27, -1, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 3, 27, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 4, 27, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 5, 27, -1, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 6, 27, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 7, 27, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 8, 27, -1, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 9, 27, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 10, 27, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 0, 28, -1, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 1, 28, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 2, 28, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 3, 28, -1, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 4, 28, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 5, 28, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 6, 28, -1, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 7, 28, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 8, 28, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 9, 28, -1, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 10, 28, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 0, 29, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 1, 29, -1, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 2, 29, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 3, 29, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 4, 29, -1, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 5, 29, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 6, 29, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 7, 29, -1, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 8, 29, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 9, 29, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 10, 29, -1, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 12, 29, -1, tsID));
+
+                tiles.Add(new Tile(TileLayer.Buildings, 0, 30, 326, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 1, 30, 326, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 2, 30, 326, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 3, 30, 326, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 4, 30, 326, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 5, 30, 326, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 6, 30, 326, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 7, 30, 326, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 8, 30, 326, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 9, 30, 327, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 0, 31, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 1, 31, -1, tsID));
+                tiles.Add(new Tile(TileLayer.Buildings, 2, 31, -1, tsID)); tiles.Add(new Tile(TileLayer.Buildings, 3, 31, -1, tsID));
+
+                tiles.Add(new Tile(TileLayer.Front, 1, 22, -1, tsID)); tiles.Add(new Tile(TileLayer.Front, 2, 22, -1, tsID)); tiles.Add(new Tile(TileLayer.Front, 3, 22, -1, tsID));
+                tiles.Add(new Tile(TileLayer.Front, 1, 23, -1, tsID)); tiles.Add(new Tile(TileLayer.Front, 2, 23, -1, tsID)); tiles.Add(new Tile(TileLayer.Front, 3, 23, -1, tsID));
+                tiles.Add(new Tile(TileLayer.Front, 0, 29, 414, tsID)); tiles.Add(new Tile(TileLayer.Front, 1, 29, 413, tsID)); tiles.Add(new Tile(TileLayer.Front, 2, 29, 414, tsID));
+                tiles.Add(new Tile(TileLayer.Front, 3, 29, 413, tsID)); tiles.Add(new Tile(TileLayer.Front, 4, 29, 414, tsID)); tiles.Add(new Tile(TileLayer.Front, 5, 29, 413, tsID));
+                tiles.Add(new Tile(TileLayer.Front, 6, 29, 414, tsID)); tiles.Add(new Tile(TileLayer.Front, 7, 29, 413, tsID)); tiles.Add(new Tile(TileLayer.Front, 8, 29, 414, tsID));
+                tiles.Add(new Tile(TileLayer.Front, 9, 29, 413, tsID)); tiles.Add(new Tile(TileLayer.Front, 10, 29, 414, tsID)); tiles.Add(new Tile(TileLayer.Front, 11, 29, 413, tsID));
+                tiles.Add(new Tile(TileLayer.Front, 12, 29, 438, tsID)); tiles.Add(new Tile(TileLayer.Front, 6, 30, 113, tsID)); tiles.Add(new Tile(TileLayer.Front, 7, 30, 114, tsID));
+
+                tiles.Add(new Tile(TileLayer.AlwaysFront, 5, 19, -1, tsID)); tiles.Add(new Tile(TileLayer.AlwaysFront, 6, 19, -1, tsID)); tiles.Add(new Tile(TileLayer.AlwaysFront, 7, 19, -1, tsID));
+                tiles.Add(new Tile(TileLayer.AlwaysFront, 5, 20, -1, tsID)); tiles.Add(new Tile(TileLayer.AlwaysFront, 6, 20, -1, tsID)); tiles.Add(new Tile(TileLayer.AlwaysFront, 7, 20, -1, tsID));
+                tiles.Add(new Tile(TileLayer.AlwaysFront, 5, 21, -1, tsID)); tiles.Add(new Tile(TileLayer.AlwaysFront, 6, 21, -1, tsID)); tiles.Add(new Tile(TileLayer.AlwaysFront, 7, 21, -1, tsID));
+                tiles.Add(new Tile(TileLayer.AlwaysFront, 5, 22, -1, tsID)); tiles.Add(new Tile(TileLayer.AlwaysFront, 6, 22, -1, tsID)); tiles.Add(new Tile(TileLayer.AlwaysFront, 7, 22, -1, tsID));
+                tiles.Add(new Tile(TileLayer.AlwaysFront, 6, 29, 88, tsID)); tiles.Add(new Tile(TileLayer.AlwaysFront, 7, 29, 89, tsID)); tiles.Add(new Tile(TileLayer.AlwaysFront, 9, 29, 60, tsID));
+                tiles.Add(new Tile(TileLayer.AlwaysFront, 10, 29, 61, tsID)); tiles.Add(new Tile(TileLayer.AlwaysFront, 11, 29, 62, tsID));
+
+                performTileEdits(gl, tiles);
+
+                gl.warps.Add(new Warp(-1, 27, "FarmExpansion", 46, 4, false));
+                gl.warps.Add(new Warp(-1, 28, "FarmExpansion", 46, 5, false));
+                gl.warps.Add(new Warp(-1, 29, "FarmExpansion", 46, 6, false));
+
+                farmExpansion.warps.Add(new Warp(48, 4, "Backwoods", 0, 27, false));
+                farmExpansion.warps.Add(new Warp(48, 5, "Backwoods", 0, 28, false));
+                farmExpansion.warps.Add(new Warp(48, 6, "Backwoods", 0, 29, false));
+
+                return;
+            }
 
             switch (Game1.whichFarm)
             {
@@ -591,6 +679,19 @@ namespace FarmExpansion.Framework
                     break;
             }
 
+            performTileEdits(gl, tiles);
+
+            gl.warps.Add(new Warp(-1, warpYLocA, "FarmExpansion", 46, 4, false));
+            gl.warps.Add(new Warp(-1, warpYLocB, "FarmExpansion", 46, 5, false));
+            gl.warps.Add(new Warp(-1, warpYLocC, "FarmExpansion", 46, 6, false));
+
+            farmExpansion.warps.Add(new Warp(48, 4, "Farm", 0, warpYLocA, false));
+            farmExpansion.warps.Add(new Warp(48, 5, "Farm", 0, warpYLocB, false));
+            farmExpansion.warps.Add(new Warp(48, 6, "Farm", 0, warpYLocC, false));
+        }
+
+        private void performTileEdits(GameLocation gl, List<Tile> tiles)
+        {
             foreach (Tile tile in tiles)
             {
                 Layer layer = gl.map.GetLayer(tile.LayerName);
@@ -607,14 +708,6 @@ namespace FarmExpansion.Framework
                 else
                     gl.setMapTileIndex(tile.X, tile.Y, tile.TileID, layer.Id);
             }
-
-            Game1.getFarm().warps.Add(new Warp(-1, warpYLocA, "FarmExpansion", 46, 4, false));
-            Game1.getFarm().warps.Add(new Warp(-1, warpYLocB, "FarmExpansion", 46, 5, false));
-            Game1.getFarm().warps.Add(new Warp(-1, warpYLocC, "FarmExpansion", 46, 6, false));
-
-            farmExpansion.warps.Add(new Warp(48, 4, "Farm", 0, warpYLocA, false));
-            farmExpansion.warps.Add(new Warp(48, 5, "Farm", 0, warpYLocB, false));
-            farmExpansion.warps.Add(new Warp(48, 6, "Farm", 0, warpYLocC, false));
         }
 
         private void robinHammerSound(StardewValley.Farmer who)
