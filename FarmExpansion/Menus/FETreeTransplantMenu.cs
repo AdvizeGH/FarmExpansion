@@ -10,7 +10,7 @@ namespace FarmExpansion.Menus
 {
     internal class FETreeTransplantMenu : IClickableMenu
     {
-        FEFramework framework;
+        private FEFramework framework;
         private IClickableMenu TreeTransplantMenu;
         private ClickableTextureComponent swapFarmButton;
         private Rectangle previousClientBounds;

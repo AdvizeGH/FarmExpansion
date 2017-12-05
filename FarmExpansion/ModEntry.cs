@@ -20,7 +20,7 @@ namespace FarmExpansion
 
         public void Edit<T>(IAssetData asset)
         {
-            switch(asset.AssetName)
+            switch (asset.AssetName)
             {
                 case @"Data\Locations":
                     asset.AsDictionary<string, string>().Data.Add(new KeyValuePair<string, string>("FarmExpansion", "-1/-1/-1/-1/-1/-1/-1/-1/382 .05 770 .1 390 .25 330 1"));
@@ -29,7 +29,7 @@ namespace FarmExpansion
                     Texture2D customTexture;
                     try
                     {
-                        customTexture = this.Helper.Content.Load<Texture2D>("WorldMap.xnb");
+                        customTexture = this.Helper.Content.Load<Texture2D>(@"assets\WorldMap.png");
 
                         Rectangle defaultFarm = new Rectangle(32, 64, 35, 25);
                         Rectangle fishingFarm = new Rectangle(32, 203, 34, 23);
