@@ -221,6 +221,10 @@ namespace FarmExpansion.Framework
                     isFarm = true,
                     isOutdoors = true
                 };
+                /*if (Game1.currentSeason.Equals("winter"))
+                {
+                    // Get rid of grass maybe... at some point (only a few lines of code but may have unintended consequences)
+                }*/
             }
             else
             {
