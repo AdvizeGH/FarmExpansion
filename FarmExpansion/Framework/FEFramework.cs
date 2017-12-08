@@ -210,7 +210,7 @@ namespace FarmExpansion.Framework
                 TimeEvents.AfterDayStarted -= this.TimeEvents_AfterDayStarted;
 
                 monitor.Log(ex.Message, LogLevel.Error);
-                monitor.Log($"Unable to load map file 'FarmExpansion.xnb', unloading mod. Please try re-installing the mod.", LogLevel.Alert);
+                monitor.Log($"Unable to load map file 'FarmExpansion.tbin', unloading mod. Please try re-installing the mod.", LogLevel.Alert);
                 return;
             }
 

@@ -48,7 +48,7 @@ namespace FarmExpansion
                     }
                     catch(Exception ex)
                     {
-                        this.Monitor.Log($"Could not load WorldMap.xnb from the mod folder, world map will not be patched.\n{ex}", LogLevel.Error);
+                        this.Monitor.Log($"Could not load WorldMap.png from the mod folder, world map will not be patched.\n{ex}", LogLevel.Error);
                     }
                     break;
             }
