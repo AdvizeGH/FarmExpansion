@@ -101,7 +101,7 @@ namespace FarmExpansion.Framework
             {
                 MapPage mp = null;
 
-                foreach (IClickableMenu page in this.helper.Reflection.GetPrivateValue<List<IClickableMenu>>(Game1.activeClickableMenu, "pages"))
+                foreach (IClickableMenu page in this.helper.Reflection.GetField<List<IClickableMenu>>(Game1.activeClickableMenu, "pages").GetValue())
                 {
                     if (!(page is MapPage))
                         continue;
@@ -111,8 +111,8 @@ namespace FarmExpansion.Framework
                 if (mp == null)
                     return;
 
-                int mapX = this.helper.Reflection.GetPrivateValue<int>(mp, "mapX");
-                int mapY = this.helper.Reflection.GetPrivateValue<int>(mp, "mapY");
+                int mapX = this.helper.Reflection.GetField<int>(mp, "mapX").GetValue();
+                int mapY = this.helper.Reflection.GetField<int>(mp, "mapY").GetValue();
                 Rectangle locationOnMap = new Rectangle(mapX + 156, mapY + 272, 100, 80);
 
                 mp.points.Add(new ClickableComponent(locationOnMap, "Farm Expansion"));
@@ -128,15 +128,15 @@ namespace FarmExpansion.Framework
 
                 if (Game1.currentLocation == farmExpansion)
                 {
-                    this.helper.Reflection.GetPrivateField<Vector2>(mp, "playerMapPosition").SetValue(new Vector2(mapX + 50 * Game1.pixelZoom, mapY + 75 * Game1.pixelZoom));
-                    this.helper.Reflection.GetPrivateField<string>(mp, "playerLocationName").SetValue("Farm Expansion");
+                    this.helper.Reflection.GetField<Vector2>(mp, "playerMapPosition").SetValue(new Vector2(mapX + 50 * Game1.pixelZoom, mapY + 75 * Game1.pixelZoom));
+                    this.helper.Reflection.GetField<string>(mp, "playerLocationName").SetValue("Farm Expansion");
                 }
                 return;
             }
             // Intercept carpenter menu
             if (e.NewMenu is CarpenterMenu)
             {
-                if (!this.helper.Reflection.GetPrivateValue<bool>(e.NewMenu, "magicalConstruction"))
+                if (!this.helper.Reflection.GetField<bool>(e.NewMenu, "magicalConstruction").GetValue())
                     Game1.activeClickableMenu = new FECarpenterMenu(this);
                 return;
             }
@@ -719,7 +719,7 @@ namespace FarmExpansion.Framework
             if (Game1.currentLocation.Equals(robin.currentLocation) && Utility.isOnScreen(robin.position, Game1.tileSize * 4))
             {
                 Game1.playSound((Game1.random.NextDouble() < 0.1) ? "clank" : "axchop");
-                helper.Reflection.GetPrivateField<int>(robin, "shakeTimer").SetValue(250);
+                helper.Reflection.GetField<int>(robin, "shakeTimer").SetValue(250);
             }
         }
 

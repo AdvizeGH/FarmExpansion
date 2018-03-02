@@ -510,7 +510,7 @@ namespace FarmExpansion
                     if (beeHive.heldObject != null)
                     {
                         beeHive.heldObject.name = str + " Honey";
-                        string displayName = framework.helper.Reflection.GetPrivateMethod(beeHive, "loadDisplayName").Invoke<string>();
+                        string displayName = framework.helper.Reflection.GetMethod(beeHive, "loadDisplayName").Invoke<string>();
                         beeHive.heldObject.displayName = displayName;
                         beeHive.heldObject.price += num6;
                         if (Game1.currentSeason.Equals("winter"))

@@ -2,7 +2,7 @@
    "Name": "Farm Expansion",
    "Author": "Advize",
    "Version": "3.2.0",
-   "MinimumApiVersion": "2.1",
+   "MinimumApiVersion": "2.5",
    "Description": "Adds an additional plot of land for crops and animals.",
    "UniqueID": "Advize.FarmExpansion",
    "EntryDll": "FarmExpansion.dll",

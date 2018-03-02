@@ -78,7 +78,7 @@ namespace FarmExpansion.Menus
             if (TreeTransplantMenu.readyToClose())
                 Game1.globalFadeToBlack(new Game1.afterFadeFunction(swapFarm));
             else
-                framework.helper.Reflection.GetPrivateMethod(TreeTransplantMenu, "handleCancelAction").Invoke();
+                framework.helper.Reflection.GetMethod(TreeTransplantMenu, "handleCancelAction").Invoke();
         }
 
         private void swapFarm()
@@ -90,8 +90,8 @@ namespace FarmExpansion.Menus
             // reset the location for our entry
             Game1.currentLocation.resetForPlayerEntry();
             // ensure the TreeTransplant menu is checking the right farm when determining whether a tree can be placed
-            Farm farm = framework.helper.Reflection.GetPrivateValue<Farm>(TreeTransplantMenu, "farm");
-            framework.helper.Reflection.GetPrivateField<Farm>(TreeTransplantMenu, "farm").SetValue(framework.swapFarm(farm));
+            Farm farm = framework.helper.Reflection.GetField<Farm>(TreeTransplantMenu, "farm").GetValue();
+            framework.helper.Reflection.GetField<Farm>(TreeTransplantMenu, "farm").SetValue(framework.swapFarm(farm));
             // set the new viewport
             Game1.viewport.Location = new Location(49 * Game1.tileSize, 5 * Game1.tileSize);
             // pan the screen
