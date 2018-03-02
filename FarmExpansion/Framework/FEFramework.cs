@@ -27,6 +27,12 @@ namespace FarmExpansion.Framework
         internal IModHelper helper;
         internal IMonitor monitor;
 
+        /// <summary>The farm blueprints to add to every menu.</summary>
+        internal readonly ICollection<BluePrint> FarmBlueprints = new List<BluePrint>();
+
+        /// <summary>The expansion area blueprints to add to every menu.</summary>
+        internal readonly ICollection<BluePrint> ExpansionBlueprints = new List<BluePrint>();
+
         private FarmExpansion farmExpansion;
         private Map map;
         private XmlSerializer locationSerializer = new XmlSerializer(typeof(FarmExpansion));
@@ -43,6 +49,16 @@ namespace FarmExpansion.Framework
             this.helper = helper;
             this.monitor = monitor;
             config = helper.ReadConfig<FEConfig>();
+        }
+
+        internal void AddFarmBluePrint(BluePrint blueprint)
+        {
+            this.FarmBlueprints.Add(blueprint);
+        }
+
+        internal void AddExpansionBluePrint(BluePrint blueprint)
+        {
+            this.ExpansionBlueprints.Add(blueprint);
         }
 
         /*internal void ControlEvents_KeyPress(object sender, EventArgsKeyPressed e)
@@ -137,7 +153,7 @@ namespace FarmExpansion.Framework
             if (e.NewMenu is CarpenterMenu)
             {
                 if (!this.helper.Reflection.GetField<bool>(e.NewMenu, "magicalConstruction").GetValue())
-                    Game1.activeClickableMenu = new FECarpenterMenu(this);
+                    Game1.activeClickableMenu = new FECarpenterMenu(this, this.FarmBlueprints.ToArray(), this.ExpansionBlueprints.ToArray()); // copy blueprint lists to avoid saving temporary blueprints
                 return;
             }
             // Intercept purchase animals menu

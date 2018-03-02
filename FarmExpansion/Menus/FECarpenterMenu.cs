@@ -8,7 +8,6 @@ using StardewValley.Buildings;
 using StardewValley.Locations;
 using StardewValley.Menus;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using xTile.Dimensions;
 using Object = StardewValley.Object;
@@ -18,9 +17,9 @@ namespace FarmExpansion.Menus
 {
     public class FECarpenterMenu : IClickableMenu
     {
-        protected ICollection<BluePrint> _farmBluePrintsToAdd = new Collection<BluePrint>();
+        protected readonly ICollection<BluePrint> _farmBluePrintsToAdd;
 
-        protected ICollection<BluePrint> _expansionBluePrintsToAdd = new Collection<BluePrint>();
+        protected readonly ICollection<BluePrint> _expansionBluePrintsToAdd;
 
         public void AddFarmBluePrint(BluePrint blueprint)
         {
@@ -122,8 +121,11 @@ namespace FarmExpansion.Menus
             }
         }
 
-        public FECarpenterMenu(/*bool magicalConstruction = false*/FEFramework framework)
+        public FECarpenterMenu(/*bool magicalConstruction = false*/FEFramework framework, ICollection<BluePrint> farmBlueprints, ICollection<BluePrint> expansionBlueprints)
         {
+            this._expansionBluePrintsToAdd = expansionBlueprints;
+            this._farmBluePrintsToAdd = farmBlueprints;
+
             //this.magicalConstruction = magicalConstruction;
             this.framework = framework;
             Game1.player.forceCanMove();
