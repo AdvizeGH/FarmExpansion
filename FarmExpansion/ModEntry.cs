@@ -12,6 +12,7 @@ namespace FarmExpansion
     public class ModEntry : Mod, IAssetEditor
     {
         private FEFramework framework;
+        public static IModHelper ModHelper;
 
         public bool CanEdit<T>(IAssetInfo asset)
         {
@@ -58,6 +59,7 @@ namespace FarmExpansion
         /// <param name="helper">Provides simplified APIs for writing mods.</param>
         public override void Entry(IModHelper helper)
         {
+            ModHelper = helper;
             framework = new FEFramework(helper, Monitor);
             framework.IsTreeTransplantLoaded = helper.ModRegistry.IsLoaded("TreeTransplant");// && helper.ModRegistry.Get("TreeTransplant").Version.IsNewerThan("1.0.0");
             //ControlEvents.KeyPressed += framework.ControlEvents_KeyPress;

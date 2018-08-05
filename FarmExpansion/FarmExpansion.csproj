@@ -45,6 +45,7 @@
     <Compile Include="Framework\ModApi.cs" />
     <Compile Include="Framework\Tile.cs" />
     <Compile Include="Framework\TileLayer.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="Menus\FECarpenterMenu.cs" />
     <Compile Include="Menus\FEPurchaseAnimalsMenu.cs" />
     <Compile Include="Menus\FETreeTransplantMenu.cs" />

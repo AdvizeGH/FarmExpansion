@@ -314,7 +314,7 @@ namespace FarmExpansion.Menus
                 {
                     foreach (Building current in currentFarm.buildings)
                     {
-                        current.color = Color.White;
+                        current.color.Value = Color.White;
                     }
                     Building buildingAt = currentFarm.getBuildingAt(new Vector2((float)((Game1.viewport.X + Game1.getOldMouseX()) / Game1.tileSize), (float)((Game1.viewport.Y + Game1.getOldMouseY()) / Game1.tileSize)));
                     if (buildingAt == null)
@@ -327,14 +327,14 @@ namespace FarmExpansion.Menus
                     }
                     if (this.upgrading)
                     {
-                        if (buildingAt != null && this.CurrentBlueprint.nameOfBuildingToUpgrade != null && this.CurrentBlueprint.nameOfBuildingToUpgrade.Equals(buildingAt.buildingType))
+                        if (buildingAt != null && this.CurrentBlueprint.nameOfBuildingToUpgrade != null && this.CurrentBlueprint.nameOfBuildingToUpgrade.Equals(buildingAt.buildingType.Value))
                         {
-                            buildingAt.color = Color.Lime * 0.8f;
+                            buildingAt.color.Value = Color.Lime * 0.8f;
                             return;
                         }
                         if (buildingAt != null)
                         {
-                            buildingAt.color = Color.Red * 0.8f;
+                            buildingAt.color.Value = Color.Red * 0.8f;
                             return;
                         }
                     }
@@ -342,13 +342,13 @@ namespace FarmExpansion.Menus
                     {
                         if (buildingAt != null)
                         {
-                            buildingAt.color = Color.Red * 0.8f;
+                            buildingAt.color.Value = Color.Red * 0.8f;
                             return;
                         }
                     }
                     else if (this.moving && buildingAt != null)
                     {
-                        buildingAt.color = Color.Lime * 0.8f;
+                        buildingAt.color.Value = Color.Lime * 0.8f;
                     }
                 }
                 return;
@@ -595,20 +595,20 @@ namespace FarmExpansion.Menus
                 if (this.demolishing)
                 {
                     Building buildingAt = currentFarm.getBuildingAt(new Vector2((float)((Game1.viewport.X + Game1.getOldMouseX()) / Game1.tileSize), (float)((Game1.viewport.Y + Game1.getOldMouseY()) / Game1.tileSize)));
-                    if (buildingAt != null && (buildingAt.daysOfConstructionLeft > 0 || buildingAt.daysUntilUpgrade > 0))
+                    if (buildingAt != null && (buildingAt.daysOfConstructionLeft.Value > 0 || buildingAt.daysUntilUpgrade.Value > 0))
                     {
                         Game1.addHUDMessage(new HUDMessage(Game1.content.LoadString("Strings\\UI:Carpenter_CantDemolish_DuringConstruction", new object[0]), Color.Red, 3500f));
                         return;
                     }
-                    if (buildingAt != null && buildingAt.indoors != null && buildingAt.indoors is AnimalHouse && (buildingAt.indoors as AnimalHouse).animalsThatLiveHere.Count > 0)
+                    if (buildingAt != null && buildingAt.indoors.Value != null && buildingAt.indoors.Value is AnimalHouse && (buildingAt.indoors.Value as AnimalHouse).animalsThatLiveHere.Count > 0)
                     {
                         Game1.addHUDMessage(new HUDMessage(Game1.content.LoadString("Strings\\UI:Carpenter_CantDemolish_AnimalsHere", new object[0]), Color.Red, 3500f));
                         return;
                     }
                     if (buildingAt != null && currentFarm.destroyStructure(buildingAt))
                     {
-                        int arg_366_0 = buildingAt.tileY;
-                        int arg_36D_0 = buildingAt.tilesHigh;
+                        int arg_366_0 = buildingAt.tileY.Value;
+                        int arg_36D_0 = buildingAt.tilesHigh.Value;
                         Game1.flashAlpha = 1f;
                         buildingAt.showDestroyedAnimation(currentFarm);
                         Game1.playSound("explosion");
@@ -624,7 +624,7 @@ namespace FarmExpansion.Menus
                     if (buildingAt2 != null && this.CurrentBlueprint.name != null && buildingAt2.buildingType.Equals(this.CurrentBlueprint.nameOfBuildingToUpgrade))
                     {
                         this.CurrentBlueprint.consumeResources();
-                        buildingAt2.daysUntilUpgrade = 2;
+                        buildingAt2.daysUntilUpgrade.Value = 2;
                         buildingAt2.showUpgradeAnimation(currentFarm);
                         Game1.playSound("axe");
                         DelayedAction.fadeAfterDelay(new Game1.afterFadeFunction(this.returnToCarpentryMenuAfterSuccessfulBuild), 1500);
@@ -644,7 +644,7 @@ namespace FarmExpansion.Menus
                         this.buildingToMove = currentFarm.getBuildingAt(new Vector2((float)((Game1.viewport.X + Game1.getMouseX()) / Game1.tileSize), (float)((Game1.viewport.Y + Game1.getMouseY()) / Game1.tileSize)));
                         if (this.buildingToMove != null)
                         {
-                            if (this.buildingToMove.daysOfConstructionLeft > 0)
+                            if (this.buildingToMove.daysOfConstructionLeft.Value > 0)
                             {
                                 this.buildingToMove = null;
                                 return;
@@ -654,7 +654,10 @@ namespace FarmExpansion.Menus
                         }
                         return;
                     }
-                    if (currentFarm.buildStructure(this.buildingToMove, new Vector2((float)((Game1.viewport.X + Game1.getMouseX()) / Game1.tileSize), (float)((Game1.viewport.Y + Game1.getMouseY()) / Game1.tileSize)), false, Game1.player))
+                    if (currentFarm.buildStructure(
+                        this.buildingToMove,
+                        new Vector2((float)((Game1.viewport.X + Game1.getMouseX()) / Game1.tileSize), (float)((Game1.viewport.Y + Game1.getMouseY()) / Game1.tileSize)),
+                        Game1.player, false))
                     {
                         this.buildingToMove = null;
                         Game1.playSound("axchop");
@@ -681,7 +684,10 @@ namespace FarmExpansion.Menus
 
         public bool tryToBuild()
         {
-            return currentFarm.buildStructure(this.CurrentBlueprint, new Vector2((float)((Game1.viewport.X + Game1.getOldMouseX()) / Game1.tileSize), (float)((Game1.viewport.Y + Game1.getOldMouseY()) / Game1.tileSize)), false, Game1.player, /*this.magicalConstruction*/false);
+            return currentFarm.buildStructure(
+                this.CurrentBlueprint,
+                new Vector2((float)((Game1.viewport.X + Game1.getOldMouseX()) / Game1.tileSize), (float)((Game1.viewport.Y + Game1.getOldMouseY()) / Game1.tileSize)),
+                Game1.player, magicalConstruction: false, skipSafetyChecks: false);
         }
 
         public void returnToCarpentryMenu()
@@ -794,7 +800,7 @@ namespace FarmExpansion.Menus
             {
                 base.draw(b);
                 IClickableMenu.drawTextureBox(b, this.xPositionOnScreen - Game1.tileSize * 3 / 2, this.yPositionOnScreen - Game1.tileSize / 4, this.maxWidthOfBuildingViewer + Game1.tileSize, this.maxHeightOfBuildingViewer + Game1.tileSize, /*this.magicalConstruction ? Color.RoyalBlue : */Color.White);
-                this.currentBuilding.drawInMenu(b, this.xPositionOnScreen + this.maxWidthOfBuildingViewer / 2 - this.currentBuilding.tilesWide * Game1.tileSize / 2 - Game1.tileSize, this.yPositionOnScreen + this.maxHeightOfBuildingViewer / 2 - this.currentBuilding.getSourceRectForMenu().Height * Game1.pixelZoom / 2);
+                this.currentBuilding.drawInMenu(b, this.xPositionOnScreen + this.maxWidthOfBuildingViewer / 2 - this.currentBuilding.tilesWide.Value * Game1.tileSize / 2 - Game1.tileSize, this.yPositionOnScreen + this.maxHeightOfBuildingViewer / 2 - this.currentBuilding.getSourceRectForMenu().Height * Game1.pixelZoom / 2);
                 if (this.CurrentBlueprint.isUpgrade())
                 {
                     this.upgradeIcon.draw(b);
@@ -832,7 +838,7 @@ namespace FarmExpansion.Menus
                 {
                     vector.Y += (float)(Game1.tileSize + Game1.pixelZoom);
                     current.drawInMenu(b, vector, 1f);
-                    bool flag = !(current is Object) || Game1.player.hasItemInInventory((current as Object).parentSheetIndex, current.Stack, 0);
+                    bool flag = !(current is Object) || Game1.player.hasItemInInventory((current as Object).ParentSheetIndex, current.Stack, 0);
                     /*if (this.magicalConstruction)
                     {
                         Utility.drawTextWithShadow(b, current.DisplayName, Game1.dialogueFont, new Vector2(vector.X + (float)Game1.tileSize + (float)(Game1.pixelZoom * 3), vector.Y + (float)(Game1.pixelZoom * 6)), Game1.textColor * 0.25f, 1f, -1f, -1, -1, this.magicalConstruction ? 0f : 0.25f, 3);
@@ -875,9 +881,9 @@ namespace FarmExpansion.Menus
                 else if (this.moving && this.buildingToMove != null)
                 {
                     Vector2 vector4 = new Vector2((float)((Game1.viewport.X + Game1.getOldMouseX()) / Game1.tileSize), (float)((Game1.viewport.Y + Game1.getOldMouseY()) / Game1.tileSize));
-                    for (int k = 0; k < this.buildingToMove.tilesHigh; k++)
+                    for (int k = 0; k < this.buildingToMove.tilesHigh.Value; k++)
                     {
-                        for (int l = 0; l < this.buildingToMove.tilesWide; l++)
+                        for (int l = 0; l < this.buildingToMove.tilesWide.Value; l++)
                         {
                             int num2 = this.buildingToMove.getTileSheetIndexForStructurePlacementTile(l, k);
                             Vector2 vector5 = new Vector2(vector4.X + (float)l, vector4.Y + (float)k);
