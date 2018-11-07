@@ -24,6 +24,9 @@ namespace FarmExpansion.Framework
 {
     public class FEFramework
     {
+        public event EventHandler BeforeRemoveEvent;
+        public event EventHandler AfterAppendEvent;
+
         internal IModHelper helper;
         internal IMonitor monitor;
 
@@ -264,6 +267,7 @@ namespace FarmExpansion.Framework
             }
 
             Game1.locations.Add(farmExpansion);
+            AfterAppendEvent?.Invoke(farmExpansion, EventArgs.Empty);
             PatchMap();
             RepairBuildingWarps();
         }
@@ -271,12 +275,14 @@ namespace FarmExpansion.Framework
         internal void SaveEvents_BeforeSave(object sender, EventArgs e)
         {
             Save();
+            BeforeRemoveEvent?.Invoke(farmExpansion, EventArgs.Empty);
             Game1.locations.Remove(farmExpansion);
         }
 
         internal void SaveEvents_AfterSave(object sender, EventArgs e)
         {
             Game1.locations.Add(farmExpansion);
+            AfterAppendEvent?.Invoke(farmExpansion, EventArgs.Empty);
         }
 
         internal void SaveEvents_AfterReturnToTitle(object sender, EventArgs e)
