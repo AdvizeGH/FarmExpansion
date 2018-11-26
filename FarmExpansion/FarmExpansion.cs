@@ -495,7 +495,13 @@ namespace FarmExpansion
                                     Game1.tileSize - 4),
                                 Game1.viewport, false, 0, false, animal, false, false, false))
                         {
-                            if (Game1.random.NextDouble() < 0.002 && building.animalDoorOpen.Value && Game1.timeOfDay < 1630 && !Game1.isRaining && !Game1.currentSeason.Equals("winter") && building.indoors.Value.getFarmers().Count() == 0 && !building.indoors.Equals(Game1.currentLocation))
+                            if (Game1.random.NextDouble() < 0.002
+                                && building.animalDoorOpen.Value
+                                && Game1.timeOfDay < 1630
+                                && !Game1.isRaining
+                                && !Game1.currentSeason.Equals("winter")
+                                && building.indoors.Value.farmers.Count() == 0
+                                && !building.indoors.Equals(Game1.currentLocation))
                             {
                                 if (isCollidingPosition(new Rectangle((building.tileX.Value + building.animalDoor.X) * Game1.tileSize + 2, (building.tileY.Value + building.animalDoor.Y) * Game1.tileSize + 2, (animal.isCoopDweller() ? Game1.tileSize : (Game1.tileSize * 2)) - 4, Game1.tileSize - 4), Game1.viewport, false, 0, false, animal, false, false, false) || isCollidingPosition(new Rectangle((building.tileX.Value + building.animalDoor.X) * Game1.tileSize + 2, (building.tileY.Value + building.animalDoor.Y + 1) * Game1.tileSize + 2, (animal.isCoopDweller() ? Game1.tileSize : (Game1.tileSize * 2)) - 4, Game1.tileSize - 4), Game1.viewport, false, 0, false, animal, false, false, false))
                                 {

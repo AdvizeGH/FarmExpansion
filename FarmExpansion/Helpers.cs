@@ -11,16 +11,6 @@ namespace FarmExpansion
 {
     static class Helpers
     {
-        public static void ReplaceWith<T>(this NetCollection<T> collection, IEnumerable<T> source)
-            where T : INetObject<INetSerializable>
-        {
-            collection.Clear();
-            foreach (var o in source)
-            {
-                collection.Add(o);
-            }
-        }
-
         public static void ReplaceWith<T, TField>(this NetVector2Dictionary<T, TField> collection, NetVector2Dictionary<T, TField> source)
             where TField : NetField<T, TField>, new()
         {
@@ -31,12 +21,22 @@ namespace FarmExpansion
             }
         }
 
-        public static void ReplaceWith<TKey, TValue>(this OverlaidDictionary<TKey, TValue> collection, OverlaidDictionary<TKey, TValue> source)
+        public static void ReplaceWith(this OverlaidDictionary collection, OverlaidDictionary source)
         {
             collection.Clear();
             foreach (var kvp in source.Pairs)
             {
                 collection.Add(kvp.Key, kvp.Value);
+            }
+        }
+
+        public static void ReplaceWith<T>(this Netcode.NetCollection<T> collection, Netcode.NetCollection<T> source)
+            where T : class, Netcode.INetObject<Netcode.INetSerializable>
+        {
+            collection.Clear();
+            foreach (var item in source)
+            {
+                collection.Add(item);
             }
         }
     }
