@@ -62,14 +62,12 @@ namespace FarmExpansion
             ModHelper = helper;
             framework = new FEFramework(helper, Monitor);
             framework.IsTreeTransplantLoaded = helper.ModRegistry.IsLoaded("TreeTransplant");// && helper.ModRegistry.Get("TreeTransplant").Version.IsNewerThan("1.0.0");
-            //ControlEvents.KeyPressed += framework.ControlEvents_KeyPress;
-            MenuEvents.MenuChanged += framework.MenuEvents_MenuChanged;
-            MenuEvents.MenuClosed += framework.MenuEvents_MenuClosed;
-            SaveEvents.AfterLoad += framework.SaveEvents_AfterLoad;
-            SaveEvents.BeforeSave += framework.SaveEvents_BeforeSave;
-            SaveEvents.AfterSave += framework.SaveEvents_AfterSave;
-            SaveEvents.AfterReturnToTitle += framework.SaveEvents_AfterReturnToTitle;
-            TimeEvents.AfterDayStarted += framework.TimeEvents_AfterDayStarted;
+            helper.Events.Display.MenuChanged += framework.OnMenuChanged;
+            helper.Events.GameLoop.SaveLoaded += framework.OnSaveLoaded;
+            helper.Events.GameLoop.Saving += framework.OnSaving;
+            helper.Events.GameLoop.Saved += framework.OnSaved;
+            helper.Events.GameLoop.ReturnedToTitle += framework.OnReturnedToTitle;
+            helper.Events.GameLoop.DayStarted += framework.OnDayStarted;
         }
 
         /// <summary>Get an API that other mods can access. This is always called after <see cref="Entry" />.</summary>
