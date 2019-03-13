@@ -14,7 +14,6 @@ namespace FarmExpansion.Framework
 
         /// <param name="category">string</param>
         /// <param name="farmer">StardewValley.Farmer</param>
-        /// <summary>Determine if the mod is enabled.</summary>
         /// <returns>Returns string</returns>
         string GetRandomAnimalShopType(string category, StardewValley.Farmer farmer);
     }
