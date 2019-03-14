@@ -137,6 +137,7 @@ namespace FarmExpansion.Menus
             // Integrate with Better Farm Animal Variety (BFAV) >= 3.x
             IBetterFarmAnimalVarietyApi api = framework.helper.ModRegistry.GetApi<IBetterFarmAnimalVarietyApi>("Paritee.BetterFarmAnimalVariety");
             Dictionary<string, Texture2D> icons = api?.GetAnimalShopIcons();
+            int iconHeight = 0;
 
             for (int i = 0; i < stock.Count; i++)
             {
@@ -148,6 +149,7 @@ namespace FarmExpansion.Menus
                 {
                     texture = icons[obj.Name];
                     sourceRect = new Microsoft.Xna.Framework.Rectangle(0, 0, texture.Width, texture.Height);
+                    iconHeight = textBox.Height > iconHeight ? textBox.Height : iconHeight;
                 }
                 else
                 {
@@ -171,6 +173,13 @@ namespace FarmExpansion.Menus
                     downNeighborID = i + 3,
                     upNeighborID = i - 3
                 });
+            }
+            
+            // Adjust the size of the menu if there are more or less rows than it normally handles
+            if (iconHeight > 0)
+            {
+                int rows = (int)Math.Ceiling((float)this.animalsToPurchase.Count / 3); // Always at least one row
+                this.height = (int)(iconHeight * 2f) + IClickableMenu.spaceToClearTopBorder + IClickableMenu.borderWidth / 2 + rows * 85;
             }
         }
 
