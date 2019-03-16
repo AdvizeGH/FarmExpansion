@@ -1,10 +1,10 @@
 ﻿{
    "Name": "Farm Expansion",
    "Author": "Advize",
-   "Version": "3.3.0",
-   "MinimumApiVersion": "2.5",
+   "Version": "3.3.1-unofficial.1",
    "Description": "Adds an additional plot of land for crops and animals.",
    "UniqueID": "Advize.FarmExpansion",
    "EntryDll": "FarmExpansion.dll",
+   "MinimumApiVersion": "2.10.1",
    "UpdateKeys": [ "Nexus:130" ]
 }
