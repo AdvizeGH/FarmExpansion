@@ -584,7 +584,7 @@ namespace FarmExpansion.Menus
                 nextFarmButton.scale = nextFarmButton.baseScale;
                 Game1.playSound("shwip");
             }
-            if (this.okButton.containsPoint(x, y) && !this.onFarm && Game1.player.money >= this.price && this.blueprints[this.currentBlueprintIndex].doesFarmerHaveEnoughResourcesToBuild())
+            if (this.okButton.containsPoint(x, y) && !this.onFarm && Game1.player.Money >= this.price && this.blueprints[this.currentBlueprintIndex].doesFarmerHaveEnoughResourcesToBuild())
             {
                 Game1.globalFadeToBlack(new Game1.afterFadeFunction(this.setUpForBuildingPlacement), 0.02f);
                 Game1.playSound("smallSelect");
@@ -831,7 +831,7 @@ namespace FarmExpansion.Menus
                 Utility.drawTextWithShadow(b, Game1.content.LoadString("Strings\\StringsFromCSFiles:LoadGameMenu.cs.11020", new object[]
                 {
                     this.price
-                }), Game1.dialogueFont, new Vector2(vector.X + (float)Game1.tileSize + (float)Game1.pixelZoom, vector.Y + (float)Game1.pixelZoom), (Game1.player.money >= this.price) ? /*(this.magicalConstruction ? Color.PaleGoldenrod : */Game1.textColor/*)*/ : Color.Red, 1f, -1f, -1, -1, /*this.magicalConstruction ? 0f : */0.25f, 3);
+                }), Game1.dialogueFont, new Vector2(vector.X + (float)Game1.tileSize + (float)Game1.pixelZoom, vector.Y + (float)Game1.pixelZoom), (Game1.player.Money >= this.price) ? /*(this.magicalConstruction ? Color.PaleGoldenrod : */Game1.textColor/*)*/ : Color.Red, 1f, -1f, -1, -1, /*this.magicalConstruction ? 0f : */0.25f, 3);
                 vector.X -= (float)(Game1.tileSize / 4);
                 vector.Y -= (float)(Game1.tileSize / 3);
                 foreach (Item current in this.ingredients)

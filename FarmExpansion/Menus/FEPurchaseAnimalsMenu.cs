@@ -235,7 +235,7 @@ namespace FarmExpansion.Menus
                 (this.newAnimalHome.indoors.Value as AnimalHouse).animalsThatLiveHere.Add(this.animalBeingPurchased.myID.Value);
                 this.newAnimalHome = null;
                 this.namingAnimal = false;
-                Game1.player.money -= this.priceOfAnimal;
+                Game1.player.Money -= this.priceOfAnimal;
                 Game1.globalFadeToBlack(new Game1.afterFadeFunction(this.setUpForReturnAfterPurchasingAnimal), 0.02f);
             }
         }
@@ -347,7 +347,7 @@ namespace FarmExpansion.Menus
                             this.newAnimalHome = buildingAt;
                             if (this.animalBeingPurchased.sound.Value != null && Game1.soundBank != null)
                             {
-                                Cue expr_15B = Game1.soundBank.GetCue(this.animalBeingPurchased.sound.Value);
+                                ICue expr_15B = Game1.soundBank.GetCue(this.animalBeingPurchased.sound.Value);
                                 expr_15B.SetVariable("Pitch", (float)(1200 + Game1.random.Next(-200, 201)));
                                 expr_15B.Play();
                             }
@@ -360,7 +360,7 @@ namespace FarmExpansion.Menus
                                 this.snapCursorToCurrentSnappedComponent();
                             }
                         }
-                        else if (Game1.player.money >= this.priceOfAnimal)
+                        else if (Game1.player.Money >= this.priceOfAnimal)
                         {
                             this.newAnimalHome = buildingAt;
                             this.animalBeingPurchased.home = this.newAnimalHome;
@@ -372,18 +372,18 @@ namespace FarmExpansion.Menus
                             this.namingAnimal = false;
                             if (this.animalBeingPurchased.sound.Value != null && Game1.soundBank != null)
                             {
-                                Cue expr_2DC = Game1.soundBank.GetCue(this.animalBeingPurchased.sound.Value);
+                                ICue expr_2DC = Game1.soundBank.GetCue(this.animalBeingPurchased.sound.Value);
                                 expr_2DC.SetVariable("Pitch", (float)(1200 + Game1.random.Next(-200, 201)));
                                 expr_2DC.Play();
                             }
-                            Game1.player.money -= this.priceOfAnimal;
+                            Game1.player.Money -= this.priceOfAnimal;
                             Game1.addHUDMessage(new HUDMessage(Game1.content.LoadString("Strings\\StringsFromCSFiles:PurchaseAnimalsMenu.cs.11324", new object[]
                             {
                                 this.animalBeingPurchased.displayType
                             }), Color.LimeGreen, 3500f));
                             this.animalBeingPurchased = new FarmAnimal(this.animalBeingPurchased.type.Value, ModEntry.ModHelper.Multiplayer.GetNewID(), Game1.player.UniqueMultiplayerID);
                         }
-                        else if (Game1.player.money < this.priceOfAnimal)
+                        else if (Game1.player.Money < this.priceOfAnimal)
                         {
                             Game1.dayTimeMoneyBox.moneyShakeTimer = 1000;
                         }
@@ -434,7 +434,7 @@ namespace FarmExpansion.Menus
                     if (current.containsPoint(x, y) && (current.item as Object).Type == null)
                     {
                         int num = current.item.salePrice();
-                        if (Game1.player.money >= num)
+                        if (Game1.player.Money >= num)
                         {
                             Game1.globalFadeToBlack(new Game1.afterFadeFunction(this.setUpForAnimalPlacement), 0.02f);
                             Game1.playSound("smallSelect");

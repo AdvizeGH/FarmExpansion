@@ -5,6 +5,6 @@
    "Description": "Adds an additional plot of land for crops and animals.",
    "UniqueID": "Advize.FarmExpansion",
    "EntryDll": "FarmExpansion.dll",
-   "MinimumApiVersion": "2.10.1",
+   "MinimumApiVersion": "3.0.0",
    "UpdateKeys": [ "Nexus:130" ]
 }
