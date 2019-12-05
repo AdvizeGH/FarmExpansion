@@ -446,6 +446,7 @@ namespace FarmExpansion.Framework
             //monitor.Log($"Object deserialized from {path}");
 
             farmExpansion.animals.CopyFrom(loaded.animals.Pairs);
+            farmExpansion.buildings.ReplaceWith(loaded.buildings);
             farmExpansion.characters.ReplaceWith(loaded.characters);
             farmExpansion.terrainFeatures.ReplaceWith(loaded.terrainFeatures);
             farmExpansion.largeTerrainFeatures.ReplaceWith(loaded.largeTerrainFeatures);
