@@ -19,6 +19,8 @@ using xTile.Layers;
 using xTile.Tiles;
 using Object = StardewValley.Object;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using System.Reflection;
+using Harmony;
 
 namespace FarmExpansion.Framework
 {
@@ -46,6 +48,11 @@ namespace FarmExpansion.Framework
         internal Texture2D TreeTransplantFarmIcon;
         private IClickableMenu menuOverride;
         private bool overridableMenuActive;
+
+        static FEFramework()
+        {
+            HarmonyInstance.Create("FarmExpansion.Framework.FEFramework").PatchAll(Assembly.GetExecutingAssembly());
+        }
 
         public FEFramework(IModHelper helper, IMonitor monitor)
         {

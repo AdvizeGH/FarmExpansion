@@ -39,6 +39,7 @@
     <Compile Include="Framework\FEFramework.cs" />
     <Compile Include="Framework\IModApi.cs" />
     <Compile Include="Framework\ModApi.cs" />
+    <Compile Include="Framework\NetBuildingRefPatch.cs" />
     <Compile Include="Framework\Tile.cs" />
     <Compile Include="Framework\TileLayer.cs" />
     <Compile Include="Helpers.cs" />
@@ -64,6 +65,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lib.Harmony.1.2.0.1\lib\net45\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.XML" />
   </ItemGroup>
