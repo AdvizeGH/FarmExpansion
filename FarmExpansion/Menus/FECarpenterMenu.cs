@@ -355,9 +355,10 @@ namespace FarmExpansion.Menus
             {
                 if (!this.upgrading && !this.demolishing && !this.moving || this.freeze)
                     return;
-                foreach (Building building in ((BuildableGameLocation)Game1.getLocationFromName("Farm")).buildings)
+                // FE: use currentFarm in several places
+                foreach (Building building in currentFarm.buildings)
                     building.color.Value = Color.White;
-                Building b = ((BuildableGameLocation)Game1.getLocationFromName("Farm")).getBuildingAt(new Vector2((float)((Game1.viewport.X + Game1.getOldMouseX()) / 64), (float)((Game1.viewport.Y + Game1.getOldMouseY()) / 64))) ?? ((BuildableGameLocation)Game1.getLocationFromName("Farm")).getBuildingAt(new Vector2((float)((Game1.viewport.X + Game1.getOldMouseX()) / 64), (float)((Game1.viewport.Y + Game1.getOldMouseY() + 128) / 64))) ?? ((BuildableGameLocation)Game1.getLocationFromName("Farm")).getBuildingAt(new Vector2((float)((Game1.viewport.X + Game1.getOldMouseX()) / 64), (float)((Game1.viewport.Y + Game1.getOldMouseY() + 192) / 64)));
+                Building b = currentFarm.getBuildingAt(new Vector2((float)((Game1.viewport.X + Game1.getOldMouseX()) / 64), (float)((Game1.viewport.Y + Game1.getOldMouseY()) / 64))) ?? currentFarm.getBuildingAt(new Vector2((float)((Game1.viewport.X + Game1.getOldMouseX()) / 64), (float)((Game1.viewport.Y + Game1.getOldMouseY() + 128) / 64))) ?? currentFarm.getBuildingAt(new Vector2((float)((Game1.viewport.X + Game1.getOldMouseX()) / 64), (float)((Game1.viewport.Y + Game1.getOldMouseY() + 192) / 64)));
                 if (this.upgrading)
                 {
                     if (b != null && this.CurrentBlueprint.nameOfBuildingToUpgrade != null && this.CurrentBlueprint.nameOfBuildingToUpgrade.Equals((string)((NetFieldBase<string, NetString>)b.buildingType)))
@@ -563,7 +564,8 @@ namespace FarmExpansion.Menus
                 return;
             if (this.demolishing)
             {
-                Farm farm = Game1.getLocationFromName("Farm") as Farm;
+                // FE: use currentFarm
+                Farm farm = currentFarm;
                 Building destroyed = farm.getBuildingAt(new Vector2((float)((Game1.viewport.X + Game1.getOldMouseX()) / 64), (float)((Game1.viewport.Y + Game1.getOldMouseY()) / 64)));
                 Action buildingLockFailed = (Action)(() =>
                 {
@@ -691,7 +693,7 @@ namespace FarmExpansion.Menus
             {
                 if (this.buildingToMove == null)
                 {
-                    this.buildingToMove = ((BuildableGameLocation)Game1.getLocationFromName("Farm")).getBuildingAt(new Vector2((float)((Game1.viewport.X + Game1.getMouseX()) / 64), (float)((Game1.viewport.Y + Game1.getMouseY()) / 64)));
+                    this.buildingToMove = currentFarm.getBuildingAt(new Vector2((float)((Game1.viewport.X + Game1.getMouseX()) / 64), (float)((Game1.viewport.Y + Game1.getMouseY()) / 64)));
                     if (this.buildingToMove == null)
                         return;
                     if ((int)((NetFieldBase<int, NetInt>)this.buildingToMove.daysOfConstructionLeft) > 0)
@@ -706,7 +708,7 @@ namespace FarmExpansion.Menus
                         Game1.playSound("axchop");
                     }
                 }
-                else if (((BuildableGameLocation)Game1.getLocationFromName("Farm")).buildStructure(this.buildingToMove, new Vector2((float)((Game1.viewport.X + Game1.getMouseX()) / 64), (float)((Game1.viewport.Y + Game1.getMouseY()) / 64)), Game1.player, false))
+                else if (currentFarm.buildStructure(this.buildingToMove, new Vector2((float)((Game1.viewport.X + Game1.getMouseX()) / 64), (float)((Game1.viewport.Y + Game1.getMouseY()) / 64)), Game1.player, false))
                 {
                     this.buildingToMove.isMoving = false;
                     if (this.buildingToMove is ShippingBin)
