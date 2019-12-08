@@ -411,6 +411,24 @@ namespace FarmExpansion.Menus
                 this.setNewActiveBlueprint();
                 Game1.playSound("shwip");
             }
+            if (!this.onFarm && b == Buttons.LeftShoulder)
+            {
+                currentFarm = framework.swapFarm(currentFarm);
+                this.currentBlueprintIndex = 0;
+                this.populateFarmBlueprints();
+                this.setNewActiveBlueprint();
+                Game1.playSound("shwip");
+                previousFarmButton.scale = previousFarmButton.baseScale;
+            }
+            if (!this.onFarm && b == Buttons.RightShoulder)
+            {
+                currentFarm = framework.swapFarm(currentFarm);
+                this.currentBlueprintIndex = 0;
+                this.populateFarmBlueprints();
+                this.setNewActiveBlueprint();
+                nextFarmButton.scale = nextFarmButton.baseScale;
+                Game1.playSound("shwip");
+            }
             if (this.onFarm || b != Buttons.RightTrigger)
                 return;
             this.currentBlueprintIndex = (this.currentBlueprintIndex + 1) % this.blueprints.Count;
