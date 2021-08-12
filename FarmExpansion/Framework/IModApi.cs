@@ -1,4 +1,5 @@
-﻿using StardewValley;
+﻿using System;
+using StardewValley;
 
 namespace FarmExpansion.Framework
 {
@@ -12,5 +13,17 @@ namespace FarmExpansion.Framework
         /// <summary>Add a blueprint to all future carpenter menus for the expansion area.</summary>
         /// <param name="blueprint">The blueprint to add.</param>
         void AddExpansionBluePrint(BluePrint blueprint);
+
+        /// <summary>
+        /// Mod removes itself from game world in BeforeSave and handles saving separately.
+        /// Hook this if you need to do some fixup to contained stuff (FurnitureAnywhere, Tractor etc).
+        /// </summary>
+        /// <param name="handler"></param>
+        void AddRemoveListener(EventHandler handler);
+
+        /// <summary>
+        /// Second half for AddRemoveListener
+        /// </summary>
+        void AddAppendListener(EventHandler handler);
     }
 }
