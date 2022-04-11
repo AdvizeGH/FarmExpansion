@@ -131,23 +131,68 @@ namespace FarmExpansion.Menus
         private void populateAnimalStock()
         {
             this.animalsToPurchase.Clear();
+
             List<Object> stock = this.getPurchaseAnimalStock();
+
+            // Integrate with Better Farm Animal Variety (BFAV) >= 3.x
+            IBetterFarmAnimalVarietyApi api = framework.helper.ModRegistry.GetApi<IBetterFarmAnimalVarietyApi>("Paritee.BetterFarmAnimalVariety");
+            Dictionary<string, Texture2D> icons = api?.GetAnimalShopIcons();
+            int iconHeight = 0;
+
             for (int i = 0; i < stock.Count; i++)
             {
-                this.animalsToPurchase.Add(new ClickableTextureComponent(string.Concat(stock[i].salePrice()), new Microsoft.Xna.Framework.Rectangle(this.xPositionOnScreen + IClickableMenu.borderWidth + i % 3 * Game1.tileSize * 2, this.yPositionOnScreen + IClickableMenu.spaceToClearTopBorder + IClickableMenu.borderWidth / 2 + i / 3 * (Game1.tileSize + Game1.tileSize / 3), Game1.tileSize * 2, Game1.tileSize), null, stock[i].Name, Game1.mouseCursors, new Microsoft.Xna.Framework.Rectangle(i % 3 * 16 * 2, 448 + i / 3 * 16, 32, 16), 4f, stock[i].Type == null)
+                Texture2D texture;
+                Microsoft.Xna.Framework.Rectangle sourceRect;
+                Object obj = stock[i];
+
+                if (icons != null)
                 {
-                    item = stock[i],
+                    texture = icons[obj.Name];
+                    sourceRect = new Microsoft.Xna.Framework.Rectangle(0, 0, texture.Width, texture.Height);
+                    iconHeight = textBox.Height > iconHeight ? textBox.Height : iconHeight;
+                }
+                else
+                {
+                    texture = Game1.mouseCursors;
+                    sourceRect = new Microsoft.Xna.Framework.Rectangle(i % 3 * 16 * 2, 448 + i / 3 * 16, 32, 16);
+                }
+
+                string name = obj.salePrice().ToString();
+                string label = null;
+                string hoverText = obj.Name;
+                Microsoft.Xna.Framework.Rectangle bounds = new Microsoft.Xna.Framework.Rectangle(this.xPositionOnScreen + IClickableMenu.borderWidth + i % 3 * 64 * 2, this.yPositionOnScreen + IClickableMenu.spaceToClearTopBorder + IClickableMenu.borderWidth / 2 + i / 3 * 85, 128, 64);
+                float scale = 4f;
+                bool drawShadow = obj.Type == null;
+
+                this.animalsToPurchase.Add(new ClickableTextureComponent(name, bounds, label, hoverText, texture, sourceRect, scale, drawShadow)
+                {
+                    item = obj,
                     myID = i,
-                    rightNeighborID = ((i % 3 == 2) ? -1 : (i + 1)),
-                    leftNeighborID = ((i % 3 == 0) ? -1 : (i - 1)),
+                    rightNeighborID = i % 3 == 2 ? -1 : i + 1,
+                    leftNeighborID = i % 3 == 0 ? -1 : i - 1,
                     downNeighborID = i + 3,
                     upNeighborID = i - 3
                 });
+            }
+            
+            // Adjust the size of the menu if there are more or less rows than it normally handles
+            if (iconHeight > 0)
+            {
+                int rows = (int)Math.Ceiling((float)this.animalsToPurchase.Count / 3); // Always at least one row
+                this.height = (int)(iconHeight * 2f) + IClickableMenu.spaceToClearTopBorder + IClickableMenu.borderWidth / 2 + rows * 85;
             }
         }
 
         private List<Object> getPurchaseAnimalStock()
         {
+            // Integrate with Better Farm Animal Variety (BFAV) >= 3.x
+            IBetterFarmAnimalVarietyApi api = framework.helper.ModRegistry.GetApi<IBetterFarmAnimalVarietyApi>("Paritee.BetterFarmAnimalVariety");
+
+            if (api != null)
+            {
+                return api.GetAnimalShopStock(currentFarm);
+            }
+
             List<Object> list = new List<Object>();
             Object item = new Object(100, 1, false, 400, 0)
             {
@@ -439,7 +484,11 @@ namespace FarmExpansion.Menus
                             Game1.globalFadeToBlack(new Game1.afterFadeFunction(this.setUpForAnimalPlacement), 0.02f);
                             Game1.playSound("smallSelect");
                             this.onFarm = true;
-                            this.animalBeingPurchased = new FarmAnimal(current.hoverText, ModEntry.ModHelper.Multiplayer.GetNewID(), Game1.player.UniqueMultiplayerID);
+
+                            // Integrate with Better Farm Animal Variety (BFAV) >= 3.x
+                            IBetterFarmAnimalVarietyApi api = framework.helper.ModRegistry.GetApi<IBetterFarmAnimalVarietyApi>("Paritee.BetterFarmAnimalVariety");
+                            string type = api == null ? current.hoverText : api.GetRandomAnimalShopType(current.hoverText, Game1.player);
+                            this.animalBeingPurchased = new FarmAnimal(type, ModEntry.ModHelper.Multiplayer.GetNewID(), Game1.player.UniqueMultiplayerID);
                             this.priceOfAnimal = num;
                         }
                         else

@@ -37,6 +37,7 @@
     <Compile Include="FarmExpansion.cs" />
     <Compile Include="Framework\FEConfig.cs" />
     <Compile Include="Framework\FEFramework.cs" />
+    <Compile Include="Framework\IBetterFarmAnimalVarietyApi.cs" />
     <Compile Include="Framework\IModApi.cs" />
     <Compile Include="Framework\ModApi.cs" />
     <Compile Include="Framework\NetBuildingRefPatch.cs" />
